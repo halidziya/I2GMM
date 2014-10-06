@@ -1,4 +1,4 @@
-#include <stdio.h>
+7#include <stdio.h>
 #include <stdlib.h>
 #include <vector>
 #include "DebugUtils.h"
@@ -153,7 +153,7 @@ int main(int argc,char** argv)
 
 
 
-		// ============= DOUBLE DP SPECIFIC ==================
+		// ============= I2GMM SPECIFIC ==================
 		//Create restaurants for each dish
 		dishrestaurants.resize(0); // Remove all
 		dishrestaurants.resize(franchise.size());
@@ -206,14 +206,14 @@ int main(int argc,char** argv)
 		Restaurants = dishrestaurants;
 		random_shuffle(Restaurants.begin(),Restaurants.end());
 		
-		// ============= DOUBLE DP SPECIFIC ENDS ==================
+		// ============= I2GMM SPECIFIC ENDS ==================
 
 
 
 		printf("Iter %d nDish %d nRests %d Score %.1f\n",num_sweep,franchise.size(),Restaurants.size(),gibbs_score);	
 			
 		for (i=0;i<Restaurants.size();i++)
-			tpool.submit(Restaurants[i]);	
+			tpool.submit(Restaurants[i]);
 		tpool.waitAll(); // Wait for finishing all jobs
 
 
@@ -269,9 +269,8 @@ int main(int argc,char** argv)
 				{
 					if (cit->table == tit)
 						intable.push_back(cit);
-				}
 
-				// I don't feel that is correct too !!!!!
+       // Initial likelihoods
 				newdishprob = tit->npoints * log(Global::gamma);
 				for(points=intable.begin();points!=intable.end();points++)
 					newdishprob += (*points)->loglik0;
@@ -283,7 +282,7 @@ int main(int argc,char** argv)
 					logprob=0;
 					for(points=intable.begin();points!=intable.end();points++)
 					{
-						// Here is computationally time consuming Under 4 for loops matrix division !!!!!!
+						// Here is computationally time consuming Under 4 for loops matrix division !!!
 						logprob+=dit->dist.likelihood((*points)->data);
 					}
 					dit->logprob = logprob + tit->npoints * log(dit->ntables); //Prior
@@ -378,24 +377,6 @@ int main(int argc,char** argv)
 				{
 					error = 1;
 					printf("Something is wrong in C code : dishid %d table %d customer %d\n",allcust[i].table->dishp->dishid,allcust[i].table->tableid,allcust[i].id-1);
-				/*	for (dit=franchise.begin(),i=0;dit!=franchise.end();dit++,i++)
-					{
-						printf("%d\n",dit->dishid);
-					}*/
-				}
-
-					/*
-					for (i=0;i<Restaurants.size();i++)
-					{					// Each table
-					for(tit=Restaurants[i].tables.begin();tit!=Restaurants[i].tables.end();tit++)
-					{
-						printf("-->%d\n",tit->dishp->dishid);
-					}
-					for (cit=Restaurants[i].customers.begin();cit!=Restaurants[i].customers.end();cit++)
-						if (cit->table->dishp->dishid <0 || cit->table->dishp->dishid > franchise.size())
-						printf("><%d\n",cit->table->dishp->dishid);
-					}
-				}*/
 			}
 			if (error)
 				pause();
