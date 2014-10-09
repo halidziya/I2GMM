@@ -35,7 +35,7 @@ mu0=mean(X,1);
 Psi=(m-d-1)*diag(diag(cov(X)))/s;
 alp=1; gam=1;
 
-%% ASPIRE
+%% I2GMM
 
 fprintf(1,'Writing files...\n');
 i2gmm_createBinaryFiles(results_dir,X,Psi,mu0,m,k0,ki,alp,gam);
