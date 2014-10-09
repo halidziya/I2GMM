@@ -39,9 +39,6 @@
     <ClCompile Include="..\..\src\Restaurant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Stut.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

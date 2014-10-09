@@ -1,4 +1,4 @@
-function [ dishes rests likelihood labels]=doubleDP_readOutput(results_dir)
+function [ dishes rests likelihood labels]=i2gmm_readOutput(results_dir)
 if (~exist('results_dir','var')) %Default value
     results_dir = ''; 
 end

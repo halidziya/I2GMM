@@ -180,7 +180,6 @@
     <ClCompile Include="..\..\src\Matrix.cpp" />
     <ClCompile Include="..\..\src\Normal.cpp" />
     <ClCompile Include="..\..\src\Restaurant.cpp" />
-    <ClCompile Include="..\..\src\Source.cpp" />
     <ClCompile Include="..\..\src\Stut.cpp" />
     <ClCompile Include="..\..\src\Table.cpp" />
     <ClCompile Include="..\..\src\ThreadPool.cpp" />

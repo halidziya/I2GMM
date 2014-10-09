@@ -94,12 +94,12 @@ X=[X_p;X_s;X_l1;X_l2];
 Y=[Y_p;Y_s;Y_l1;Y_l2];
 S=[S_p;S_s;S_l1;S_l2];
 
-fname=[pwd '\experiments\simulated\data\NIPS14_flower.mat'];
+fname=[pwd '\..\data\NIPS14_flower.mat'];
 save(fname,'X','Y','S','mu_p','C_p','mu_s','C_s','mu_l','C_l');
 % set(gca,'LooseInset',get(gca,'TightInset'));
 % set(ha(1:nr*nc),'XTickLabel',''); set(ha,'YTickLabel','');
 % cd('C:\Users\mdundar\Desktop\MATLAB\Papers\AML_FC\ToyExperiment\');
- fname=[pwd '\experiments\simulated\figures\NIPS14_flower.ps'];
+ fname=[pwd '\..\data\NIPS14_flower.ps'];
  print('-depsc','-r300',fname); 
 % print('-dtiff','-r300',fname);
  fixPSlinestyle(fname)
