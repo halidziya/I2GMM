@@ -1,0 +1,1 @@
+i2gmm.exe ../data/flower.matrix ../data/flower_prior.matrix ../data/flower_params.matrix

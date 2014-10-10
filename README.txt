@@ -1,6 +1,6 @@
 I2GMM: Infinite mixtures of Infinite Gaussian Mixtures
 
-Description: I2GMM is a non parametric Bayesian model for clustering applications. It allows arbitrary number of meta-clusters with arbitrary shapes including skewed and multi-modal ones. Modeling each meta-cluster with an Dirichlet Process with Normal distributions instead of using single Gaussian leads to a flexible model. Conjugate normal distribution in hierarchy allows efficient sampling schema. Partial parallelization is possible by conditioning on upper layer. Empirical evaluation on public datasets shows the effectiveness of the model. This model is also related with the ASPIRE model which works on grouped clustering problems. For more details about ASPIRE please refer to ASPIRE web site
+Description: I2GMM is a non parametric Bayesian model for clustering applications. It allows arbitrary number of meta-clusters with arbitrary shapes including skewed and multi-modal ones. Modeling each meta-cluster with an Dirichlet Process with Normal distributions instead of using single Gaussian leads to a flexible model. Conjugate normal distribution in hierarchy allows efficient sampling schema. Partial parallelization is possible by conditioning on upper layer. Empirical evaluation on public datasets shows the effectiveness of the model. This model is also related with the ASPIRE model which works on grouped clustering problems. For more details about ASPIRE please refer to ASPIRE web site. 
 
 References : 
 Halid Z. Yerebakan, Bartek Rajwa, Murat Dundar, "The Infinite Mixture of Infinite Gaussian Mixtures," to appear in NIPS'14.
@@ -21,6 +21,12 @@ Matrix size for files should be nxd , nx1 , 1x6 respectively. First one is data 
 Limitations : Due to covariance matrix of the gaussian distributions, this algorithm does not scale well with the dimensions. Maximum dimensions used in experiments was 30. Largest size for the datasets was ~280k points. Usual processing time for 100k points around one day. 
 
 Source code includes 3rd party files. These files indicated with appropriate comments. munkres.m plot_gaussian_ellipsoid.m utils.cpp utils.h
+
+Folder structure:
+run > contains Matlab wrapper functions and visualizations 
+src > C++ code of the i2gmm
+i2gmm > Visual studio project files
+data  > Flower dataset
 
 Questions and Comments :
 Please send email to hzyereba@cs.iupui.edu with title I2GMM
