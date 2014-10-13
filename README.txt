@@ -1,12 +1,12 @@
 I2GMM: Infinite mixtures of Infinite Gaussian Mixtures
 
-Description: I2GMM is a non parametric Bayesian model for clustering applications. It allows arbitrary number of meta-clusters with arbitrary shapes including skewed and multi-modal ones. Modeling each meta-cluster with an Dirichlet Process with Normal distributions instead of using single Gaussian leads to a flexible model. Conjugate normal distribution in hierarchy allows efficient sampling schema. Partial parallelization is possible by conditioning on upper layer. Empirical evaluation on public datasets shows the effectiveness of the model. This model is also related with the ASPIRE model which works on grouped clustering problems. For more details about ASPIRE please refer to ASPIRE web site. 
+Description: I2GMM is a non parametric Bayesian model for clustering applications. It allows arbitrary number of meta-clusters with arbitrary shapes including skewed and multi-modal ones. Modeling each meta-cluster with an Dirichlet Process with Gaussian distributions instead of using single Gaussian leads to a flexible model. Conjugate Gaussian distribution in hierarchy allows efficient sampling schema. Partial parallelization is possible by conditioning on upper layer. Empirical evaluation on public datasets shows the effectiveness of the model. This model is also related with the ASPIRE model which works on grouped clustering problems. For more details about ASPIRE please refer to ASPIRE web site. 
 
 References : 
 Halid Z. Yerebakan, Bartek Rajwa, Murat Dundar, "The Infinite Mixture of Infinite Gaussian Mixtures," to appear in NIPS'14.
 Murat Dundar, Halid Z. Yerebakan, Bartek Rajwa, "Batch Discovery of Recurring Rare Classes toward Identifying Anomalous Samples," In Proceedings of the 20th Annual SIGKDD International Conference on Knowledge Discovery and Data Mining (SIGKDD'14), New York, USA, Aug 24-27 2014.
 
-Platform: The algorithm is developed in C++11. The executable is generated in Windows 7 64 bit environment, using 32-64 bit releases with compiler configuration. Multi-threading is provided by C+11 features. There is an example Matlab wrapper function (i2gmm_demo) in the same package. But executable is stand-alone and it can work if appropriate files are provided in the same format.
+Platform: The algorithm is developed in C++11. The executable is generated in Windows 7 64 bit environment, using 32-64 bit releases with compiler configuration. Multi-threading is provided by C++11 features. There is an example Matlab wrapper function (i2gmm_demo.m) in the same package. But executable is stand-alone and it can work if appropriate files are provided in the same format.
 
 File Format:Input files are in "binary" matrix file format. In this format 2 leading integers defines the matrix size and following doubles are the matrix entries.
 
