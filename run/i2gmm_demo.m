@@ -3,6 +3,11 @@ clc;
 
 currentDir=pwd;
 addpath([currentDir,'\src']);
+mkdir(currentDir,'\experiments');
+mkdir(currentDir,'\experiments\simulated');
+mkdir(currentDir,'\experiments\simulated\data');
+mkdir(currentDir,'\experiments\simulated\results');
+mkdir(currentDir,'\experiments\simulated\figures');
 addpath([currentDir,'\experiments\simulated\data']);
 results_parentdir=[currentDir,'\experiments\simulated\results\'];
 addpath(results_parentdir);
@@ -38,10 +43,10 @@ alp=1; gam=1;
 %% I2GMM
 
 fprintf(1,'Writing files...\n');
-i2gmm_createBinaryFiles(results_dir,X,Psi,mu0,m,k0,ki,alp,gam);
-data=[results_dir,'.matrix'];
-prior=[results_dir,'_prior.matrix'];
-params=[results_dir,'_params.matrix'];
+i2gmm_createBinaryFiles([ results_dir 'toy' ],X,Psi,mu0,m,k0,ki,alp,gam);
+data=[results_dir,'toy.matrix'];
+prior=[results_dir,'toy_prior.matrix'];
+params=[results_dir,'toy_params.matrix'];
 
 num_sweeps='1500';
 burn_in='1000';
