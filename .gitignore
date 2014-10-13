@@ -159,6 +159,5 @@ Desktop.ini
 ## Experiment Outputs
 run/experiments/*
 run/data/*
-*.mat
 *.zip
 *.asv

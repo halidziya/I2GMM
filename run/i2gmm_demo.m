@@ -69,7 +69,7 @@ for l=1:length(uc)
 end
 axis tight
 
- fname=[pwd '\experiments\simulated\figures\imig_NIPS14_flower_',num2str(j),'.ps'];
+ fname=[pwd '\experiments\simulated\figures\I2GMM_NIPS14_flower_',num2str(j),'.ps'];
  print('-depsc','-r300',fname); 
  fixPSlinestyle(fname)
 end
