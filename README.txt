@@ -1,4 +1,4 @@
-I2GMM: Infinite mixtures of Infinite Gaussian Mixtures
+<b>I2GMM: Infinite mixtures of Infinite Gaussian Mixtures</b>
 
 Description: I2GMM is a non parametric Bayesian model for clustering applications. It allows arbitrary number of meta-clusters with arbitrary shapes including skewed and multi-modal ones. Modeling each meta-cluster with an Dirichlet Process with Gaussian distributions instead of using single Gaussian leads to a flexible model. Conjugate Gaussian distribution in hierarchy allows efficient sampling schema. Partial parallelization is possible by conditioning on upper layer. Empirical evaluation on public datasets shows the effectiveness of the model. This model is also related with the ASPIRE model which works on grouped clustering problems. For more details about ASPIRE please refer to ASPIRE web site. 
 
