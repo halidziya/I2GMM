@@ -25,7 +25,7 @@ i2gmm.exe datafile priorfile parametersfile [#sweeps] [#burnin] [result_dir] [sa
 
 Matrix size for files should be nxd , nx1 , 1x6 respectively. First one is data matrix with each row is an individual data point in d dimensional space. Prior file holds the covariance matrix at top and the last row is the mean vector. Parameters are d m kappa kappa1 alpha gamma respectively in the parameter file. The last four arguments are optional and default values are 1000 100 for sweeps and burnin. Result directory specifies the output path. Default value for output path is path of executable. Sample lag defines how many gibbs iterations between two saved state after burnin. For the default value 11 post burnin samples are created. 
 
-Limitations: Due to covariance matrix of the gaussian distributions, this algorithm does not scale well with the dimensions. Maximum dimensions used in experiments was 30. Largest size for the datasets was ~280k points. Usual processing time for 100k points is around one day. 
+Limitations: Due to covariance matrix of the gaussian distributions, this algorithm does not scale well with the dimensions. Maximum dimensions used in experiments was 30. Largest size for the datasets was ~280k points.
 
 Source code includes 3rd party files. These files indicated with appropriate comments. munkres.m plot_gaussian_ellipsoid.m utils.cpp utils.h
 
