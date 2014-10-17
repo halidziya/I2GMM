@@ -47,7 +47,7 @@ int main(int argc,char** argv)
 		SAMPLE = atoi(argv[7]);
 	
 	step();
-					 // Computing buffer
+	// Computing buffer
 
 	printf("Reading...\n");
 	DataSet ds(datafile,priorfile,configfile);
@@ -80,7 +80,6 @@ int main(int argc,char** argv)
 	vector<Restaurant> Restaurants;
 	vector<Restaurant> beststate;
 	vector<vector<Restaurant>::iterator> Restaurantit; // Hash table
-	// vector<Customer> customers;
 	list<Dish> franchise;
 	list<Dish> bestdishes;
 	Matrix     sampledLabels((MAX_SWEEP-BURNIN)/SAMPLE + 1,ds.n);
@@ -88,7 +87,7 @@ int main(int argc,char** argv)
 	Customer bestcustomer;
 	int i,j,k;
 	
-// INITIALIZATION
+	// INITIALIZATION
 	printf("Number of Cores : %d\n",thread::hardware_concurrency());
 
 	step();
@@ -122,9 +121,9 @@ int main(int argc,char** argv)
 	firstDish->calculateDist();
 	Restaurants[i].tables.front().calculateDist();
 
-//END INITIALIZATION
+	//END INITIALIZATION
 
-// GIBBS SAMPLER
+	// GIBBS SAMPLER
 
 
 	// NUMBER OF THREADS
@@ -152,8 +151,6 @@ int main(int argc,char** argv)
 	{
 
 
-
-		// ============= DOUBLE DP SPECIFIC ==================
 		//Create restaurants for each dish
 		dishrestaurants.resize(0); // Remove all
 		dishrestaurants.resize(franchise.size());
@@ -191,9 +188,6 @@ int main(int argc,char** argv)
 			dishrestaurants[id].customers.push_back(allcust[i]);
 		}
 
-		//for (i=0;i<dishrestaurants.size();i++)
-		// std::random_shuffle(dishrestaurants[i].customers.begin(),dishrestaurants[i].customers.end());
-
 		// Submit Jobs
 		// 1st Loop
 		//
@@ -205,10 +199,6 @@ int main(int argc,char** argv)
 		Restaurants.resize(0);
 		Restaurants = dishrestaurants;
 		random_shuffle(Restaurants.begin(),Restaurants.end());
-		
-		// ============= DOUBLE DP SPECIFIC ENDS ==================
-
-
 
 		printf("Iter %d nDish %d nRests %d Score %.1f\n",num_sweep,franchise.size(),Restaurants.size(),gibbs_score);	
 			
@@ -216,8 +206,6 @@ int main(int argc,char** argv)
 			tpool.submit(Restaurants[i]);	
 		tpool.waitAll(); // Wait for finishing all jobs
 
-
-			
 
 		for(dit=franchise.begin();dit!=franchise.end();dit++) // For each dish
 		{
@@ -378,24 +366,7 @@ int main(int argc,char** argv)
 				{
 					error = 1;
 					printf("Something is wrong in C code : dishid %d table %d customer %d\n",allcust[i].table->dishp->dishid,allcust[i].table->tableid,allcust[i].id-1);
-				/*	for (dit=franchise.begin(),i=0;dit!=franchise.end();dit++,i++)
-					{
-						printf("%d\n",dit->dishid);
-					}*/
 				}
-
-					/*
-					for (i=0;i<Restaurants.size();i++)
-					{					// Each table
-					for(tit=Restaurants[i].tables.begin();tit!=Restaurants[i].tables.end();tit++)
-					{
-						printf("-->%d\n",tit->dishp->dishid);
-					}
-					for (cit=Restaurants[i].customers.begin();cit!=Restaurants[i].customers.end();cit++)
-						if (cit->table->dishp->dishid <0 || cit->table->dishp->dishid > franchise.size())
-						printf("><%d\n",cit->table->dishp->dishid);
-					}
-				}*/
 			}
 			if (error)
 				pause();
@@ -413,17 +384,15 @@ int main(int argc,char** argv)
 	Restaurants = beststate;
 	
 
-string s(result_dir);
-ofstream dishfile( s.append("Dish.dish"),ios::out | ios::binary); // Be careful result_dir should include '\'
-s.assign(result_dir);
-ofstream restfile( s.append("Restaurant.rest"),ios::out | ios::binary);
-s.assign(result_dir);
-ofstream likefile( s.append("Likelihood.matrix"),ios::out | ios::binary);
-
-s.assign(result_dir);
-ofstream labelfile( s.append("Labels.matrix"),ios::out | ios::binary);
-	//ofstream dishfile("Dish.dish",ios::out | ios::binary);
-	//ofstream restfile("Restaurant.rest",ios::out | ios::binary);
+	string s(result_dir);
+	ofstream dishfile( s.append("Dish.dish"),ios::out | ios::binary); // Be careful result_dir should include '\'
+	s.assign(result_dir);
+	ofstream restfile( s.append("Restaurant.rest"),ios::out | ios::binary);
+	s.assign(result_dir);
+	ofstream likefile( s.append("Likelihood.matrix"),ios::out | ios::binary);
+	
+	s.assign(result_dir);
+	ofstream labelfile( s.append("Labels.matrix"),ios::out | ios::binary);
 
 	int ndish = franchise.size();
 	int nrest = Restaurants.size();
