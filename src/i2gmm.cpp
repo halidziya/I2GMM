@@ -259,7 +259,7 @@ int main(int argc,char** argv)
 						intable.push_back(cit);
 				}
 
-				// I don't feel that is correct too !!!!!
+				
 				newdishprob = tit->npoints * log(Global::gamma);
 				for(points=intable.begin();points!=intable.end();points++)
 					newdishprob += (*points)->loglik0;
