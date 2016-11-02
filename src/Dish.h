@@ -8,10 +8,9 @@ using namespace std;
 
 class Table;
 
-class Dish : public Global
+class Dish 
 {
 public:
-	friend Global;
 	Stut dist;
 	Dish(Stut t);
 	Dish(int d); 

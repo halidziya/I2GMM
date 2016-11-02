@@ -34,7 +34,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 17.0</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
@@ -46,13 +46,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 17.0</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <UseIntelMKL>Parallel</UseIntelMKL>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 17.0</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -66,9 +67,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 17.0</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <UseIntelMKL>Parallel</UseIntelMKL>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -93,10 +95,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>../../run</OutDir>
+    <OutDir>C:\Users\hzyereba\Desktop\I2GMM\run</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>../../run</OutDir>
+    <OutDir>C:\Users\hzyereba\Desktop\I2GMM\run</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,6 +125,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\hzyereba\Desktop\FastMat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -163,6 +167,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\hzyereba\Desktop\FastMat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
+      <EnableMatrixMultiplyLibraryCall>Yes</EnableMatrixMultiplyLibraryCall>
+      <Parallelization>true</Parallelization>
+      <UseIntelOptimizedHeaders>true</UseIntelOptimizedHeaders>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -171,36 +181,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Buffer.cpp" />
     <ClCompile Include="..\..\src\Customer.cpp" />
     <ClCompile Include="..\..\src\DataSet.cpp" />
     <ClCompile Include="..\..\src\Dish.cpp" />
     <ClCompile Include="..\..\src\i2gmm.cpp" />
-    <ClCompile Include="..\..\src\Global.cpp" />
-    <ClCompile Include="..\..\src\Matrix.cpp" />
-    <ClCompile Include="..\..\src\Normal.cpp" />
     <ClCompile Include="..\..\src\Restaurant.cpp" />
-    <ClCompile Include="..\..\src\Stut.cpp" />
     <ClCompile Include="..\..\src\Table.cpp" />
-    <ClCompile Include="..\..\src\ThreadPool.cpp" />
-    <ClCompile Include="..\..\src\util.cpp" />
-    <ClCompile Include="..\..\src\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Buffer.h" />
     <ClInclude Include="..\..\src\Customer.h" />
     <ClInclude Include="..\..\src\DataSet.h" />
-    <ClInclude Include="..\..\src\DebugUtils.h" />
     <ClInclude Include="..\..\src\Dish.h" />
-    <ClInclude Include="..\..\src\Global.h" />
-    <ClInclude Include="..\..\src\Matrix.h" />
-    <ClInclude Include="..\..\src\Normal.h" />
     <ClInclude Include="..\..\src\Restaurant.h" />
-    <ClInclude Include="..\..\src\Stut.h" />
     <ClInclude Include="..\..\src\Table.h" />
-    <ClInclude Include="..\..\src\ThreadPool.h" />
-    <ClInclude Include="..\..\src\util.h" />
-    <ClInclude Include="..\..\src\Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FastMat\FastMat\FastMat.vcxproj">
+      <Project>{110c56d1-c85f-48b4-bb9e-6a5c701412ea}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

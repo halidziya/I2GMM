@@ -21,8 +21,7 @@ int SAMPLE=(MAX_SWEEP-BURNIN)/10; // Default value is 10 sample + 1 post burnin
 char* result_dir = "./";
 
 // Variables
-int d,n;
-double m,kep,eta;
+double kep,eta;
 
 
 PILL_DEBUG
@@ -51,10 +50,8 @@ int main(int argc,char** argv)
 
 	printf("Reading...\n");
 	DataSet ds(datafile,priorfile,configfile);
-	d = ds.d;
-	n = ds.n;
-	kep = ds.kappa*ds.kappai/(ds.kappa+ds.kappai);
-	eta = ds.m - d + 2;
+	kep = kappa*kappa1/(kappa+ kappa1);
+	eta = m - d + 2;
 
 	precomputeGammaLn(2*(n+d)+1);  // With 0.5 increments
 	init_buffer(thread::hardware_concurrency(),d);	
@@ -63,15 +60,14 @@ int main(int argc,char** argv)
 	
 	Matrix priorvariance(d,d);
 	
-	Global::Psi = ds.prior;
+	Psi = ds.prior;
+	Psi.r = d; // Last row is shadowed
+	Psi.n = d*d;
+	mu0 =  ds.prior(d).copy();
 	
-	Global::Psi.r = d; // Last row is shadowed
-	Global::Psi.n = d*d;
-	Global::mu0 =  ds.prior(ds.d).copy();
-	
-	Global::eta = eta;
-	priorvariance = Global::Psi*((kep+1)/((kep)*eta));
-	priormean = Global::mu0;
+	eta = eta;
+	priorvariance = Psi*((kep+1)/((kep)*eta));
+	priormean = mu0;
 	
 	Stut stt(priormean,priorvariance,eta); 
 	Vector loglik0;
@@ -82,7 +78,7 @@ int main(int argc,char** argv)
 	vector<vector<Restaurant>::iterator> Restaurantit; // Hash table
 	list<Dish> franchise;
 	list<Dish> bestdishes;
-	Matrix     sampledLabels((MAX_SWEEP-BURNIN)/SAMPLE + 1,ds.n);
+	Matrix     sampledLabels((MAX_SWEEP-BURNIN)/SAMPLE + 1,n);
 	Table besttable;
 	Customer bestcustomer;
 	int i,j,k;
@@ -96,7 +92,7 @@ int main(int argc,char** argv)
 	step();
 	
 	// One cluster for each object initially
-	franchise.push_back(Dish(ds.d));
+	franchise.push_back(Dish(d));
 	list<Dish>::iterator firstDish = franchise.begin();
 	i=0;
 	Restaurants.reserve(200);
@@ -107,7 +103,7 @@ int main(int argc,char** argv)
 	
 	// Create customers
 	vector<Customer> allcust;
-	for(i=0;i<ds.n;i++)
+	for(i=0;i<n;i++)
 	{
 		Restaurants[0].tables.begin()->addInitPoint(ds.data(i));
 		Restaurants[0].customers.emplace_back(ds.data(i),loglik0[i],Restaurants[0].tables.begin(),i+1);
@@ -141,8 +137,8 @@ int main(int argc,char** argv)
 
 	double newdishprob,maxdishprob,sumprob,val,logprob,gibbs_score,best_score;
 	int kal=1,id;
-	gibbs_score = -my_infinity();
-	best_score = -my_infinity();
+	gibbs_score = -INFINITE;
+	best_score = -INFINITE;
 
 	Vector score(MAX_SWEEP+1);
 	
@@ -181,7 +177,7 @@ int main(int argc,char** argv)
 
 		}
 
-		for (i=0;i<ds.n;i++)
+		for (i=0;i<n;i++)
 		{
 			id = allcust[i].table->dishp->dishid;
 			allcust[i].table = allcust[i].table->copy;
@@ -259,8 +255,7 @@ int main(int argc,char** argv)
 						intable.push_back(cit);
 				}
 
-				// I don't feel that is correct too !!!!!
-				newdishprob = tit->npoints * log(Global::gamma);
+				newdishprob = tit->npoints * log(gamma);
 				for(points=intable.begin();points!=intable.end();points++)
 					newdishprob += (*points)->loglik0;
 
@@ -314,18 +309,30 @@ int main(int argc,char** argv)
 			}
 		}
 
-
-		// 4th loop 
-		for (i=0;i<Restaurants.size();i++)
+		for (kappa = 0.5; kappa < 2; kappa += 0.5)
 		{
-			// Each table
-			for(tit=Restaurants[i].tables.begin();tit!=Restaurants[i].tables.end();tit++)
+			// 4th loop 
+			for (i = 0; i < Restaurants.size(); i++)
 			{
-				tit->calculateDist();
+				// Each table
+				for (tit = Restaurants[i].tables.begin(); tit != Restaurants[i].tables.end(); tit++)
+				{
+					tit->calculateDist();
+				}
 			}
-				
+
+			logprob = 0;
+			for (dit = franchise.begin(); dit != franchise.end(); dit++)
+			{
+				for (points = intable.begin(); points != intable.end(); points++)
+				{
+					// Here is computationally time consuming Under 4 for loops matrix division !!!!!!
+					logprob += dit->dist.likelihood((*points)->data);
+				}
+				//logprob = logprob + tit->npoints * log(dit->ntables); //Prior
+			}
+			cout << logprob << endl;
 		}
-		
 		
 		// Calculate Gibbs Score
 		gibbs_score = 0;
@@ -359,7 +366,7 @@ int main(int argc,char** argv)
 			}
 
 
-			for(i=0;i<ds.n;i++)
+			for(i=0;i<n;i++)
 			{
 				sampledLabels((num_sweep-BURNIN)/SAMPLE)[allcust[i].id-1] = allcust[i].table->dishp->dishid;
 				if (allcust[i].table->dishp->dishid<0 || allcust[i].table->dishp->dishid>franchise.size())

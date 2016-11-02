@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class Restaurant : public virtual Task , public Global // Collection of clusters and data points
+class Restaurant : public virtual Task// Collection of clusters and data points
 {
 public:
 

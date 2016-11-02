@@ -15,7 +15,7 @@ DataSet::DataSet(char* datafile,char* priorfile,char* configfile)
 	d =  conf(0)(0);
 	m =  conf(0)[1];
 	kappa  = conf(0)[2];
-	kappai = conf(0)[3];
+	kappa1 = conf(0)[3];
 	alpha  = conf(0)[4];
 	gamma  = conf(0)[5];
 

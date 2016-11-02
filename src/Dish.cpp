@@ -55,7 +55,7 @@ Dish::~Dish(void)
 
 void Dish::addCluster(Table& cluster)
 {
-	double coef1 = cluster.npoints*kappai / (cluster.npoints+kappai);
+	double coef1 = cluster.npoints*kappa1 / (cluster.npoints+ kappa1);
 	sampleMean = (sampleMean * (kapi/(kapi+coef1)) + (cluster.sampleMean*(coef1/(kapi+coef1))));
 	kapi = kapi + coef1;
 	sampleScatter = sampleScatter + cluster.sampleScatter ; 
@@ -67,7 +67,7 @@ void Dish::addCluster(Table& cluster)
 void Dish::removeCluster(Table& cluster)
 {
 	
-	double coef1 = cluster.npoints*kappai / (cluster.npoints+kappai);
+	double coef1 = cluster.npoints*kappa1 / (cluster.npoints+kappa1);
  	sampleScatter = sampleScatter - cluster.sampleScatter ; 
 	kapi = kapi - coef1;
 	sampleMean = (sampleMean * ((kapi+coef1)/(kapi)) - (cluster.sampleMean*((coef1)/kapi)));
@@ -78,7 +78,7 @@ void Dish::removeCluster(Table& cluster)
 
 void Dish::calculateDist()
 {
-	kap = harmean(kapi+kappa,kappai);
+	kap = harmean(kapi+kappa, kappa1);
 	dist.eta = m + 2 + nsamples - d - ntables ; //dpar0
 	dist.mu =( sampleMean*kapi + mu0*kappa )/(kapi + kappa); // dpar1
 	dist.cholsigma = (( Psi + sampleScatter)*((kap + 1)/(kap*dist.eta))).chol(); // dpar2

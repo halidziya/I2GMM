@@ -1,12 +1,12 @@
 #pragma once
-#include "Stut.h"
+#include "FastMat.h"
 #include "Dish.h"
 #include <list>
 #include "Global.h"
 
 using namespace std;
 
-class Table : public Global
+class Table
 {
 public:
 	Stut dist;

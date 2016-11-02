@@ -56,13 +56,14 @@ void Restaurant::run(int id)
 	list<Dish>::iterator ki;
 	Table copy;
 	likelihood=0;
+	int removed = 0;
 	for (i=0;i< n;i++)
 	{
 		Vector& x = customers[i].data;
 		oldtable = customers[i].table;
 		copy = *oldtable;
 		ki = customers[i].table->dishp;
-
+		removed = 0;
 		customers[i].table->removePoint(x);
 		// printf("%d\n",customers[i].table->npoints);
 		sum = 0;
@@ -70,9 +71,11 @@ void Restaurant::run(int id)
 		
 		npts = customers[i].table->npoints;
 
-		if (customers[i].table->npoints ==0 )
+		if (customers[i].table->npoints == 0)
+		{
+			removed = 1;
 			tables.erase(customers[i].table);
-
+		}
 		/*for(tit=tables.begin();tit!=tables.end();tit++)
 			if (ki == tit->dishp)
 				subrest+= tit->npoints;*/
@@ -120,7 +123,7 @@ void Restaurant::run(int id)
 		customers[i].table = tit;
 
 		likelihood += tit->loglikelihood;
-		if (tit==oldtable)
+		if (!removed && tit==oldtable)
 			*tit = copy;
 		else
 			tit->addPoint(x); // Add point to selected one
