@@ -6,6 +6,7 @@ c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\dataset.obj
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\dish.obj
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\i2gmm.obj
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\global.obj
+c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\matrix.obj
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\normal.obj
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\restaurant.obj
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\source.obj
@@ -14,10 +15,12 @@ c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\table.obj
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\threadpool.obj
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\util.obj
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\vector.obj
-c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\matrix.obj
-c:\users\hzyereba\desktop\i2gmm\i2gmm\x64\debug\i2gmm.ilk
-c:\users\hzyereba\desktop\i2gmm\i2gmm\x64\debug\i2gmm.exe
-c:\users\hzyereba\desktop\i2gmm\i2gmm\x64\debug\i2gmm.pdb
+c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\vc140.pdb
+c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\vc140.idb
+c:\users\hzyereba\desktop\i2gmm\run\i2gmm.ilk
+c:\users\hzyereba\desktop\i2gmm\run\i2gmm.exe
+c:\users\hzyereba\desktop\i2gmm\run\i2gmm.pdb
+c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\i2gmm.vcxprojresolveassemblyreference.cache
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\i2gmm.tlog\cl.command.1.tlog
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\i2gmm.tlog\cl.read.1.tlog
 c:\users\hzyereba\desktop\i2gmm\i2gmm\i2gmm\x64\debug\i2gmm.tlog\cl.write.1.tlog

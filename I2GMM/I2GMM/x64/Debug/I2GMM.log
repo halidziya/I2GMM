@@ -8,22 +8,26 @@ c:\users\hzyereba\desktop\i2gmm\src\restaurant.cpp(53): warning C4101: 'subrest'
 c:\users\hzyereba\desktop\i2gmm\src\restaurant.cpp(139): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 c:\users\hzyereba\desktop\i2gmm\src\restaurant.cpp(142): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   i2gmm.cpp
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(36): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(72): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(246): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(392): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(393): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(199): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'unsigned __int64'
-  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(199): note: consider using '%zd' in the format string
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(199): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'unsigned __int64'
-  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(199): note: consider using '%zd' in the format string
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(84): warning C4101: 'k': unreferenced local variable
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(84): warning C4101: 'j': unreferenced local variable
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(80): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(408): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(553): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(554): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(361): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'unsigned __int64'
+  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(361): note: consider using '%zd' in the format string
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(361): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'unsigned __int64'
+  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(361): note: consider using '%zd' in the format string
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(126): warning C4101: 'j': unreferenced local variable
   Dish.cpp
   DataSet.cpp
 c:\users\hzyereba\desktop\i2gmm\src\dataset.cpp(16): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   Customer.cpp
+  Running Code Analysis for C/C++...
   Generating Code...
-C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   I2GMM.vcxproj -> C:\Users\hzyereba\Desktop\I2GMM\run\I2GMM.exe
   I2GMM.vcxproj -> C:\Users\hzyereba\Desktop\I2GMM\run\I2GMM.pdb (Full PDB)
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(361): warning C6328: Size mismatch: 'unsigned __int64' passed as _Param_(3) when 'int' is required in call to 'printf'. 
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(92): warning C28159: Consider using 'GetTickCount64' instead of 'GetTickCount'. Reason: GetTickCount overflows roughly every 49 days.  Code that does not take that into account can loop indefinitely.  GetTickCount64 operates on 64 bit values and does not have that problem
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(131): warning C28159: Consider using 'GetTickCount64' instead of 'GetTickCount'. Reason: GetTickCount overflows roughly every 49 days.  Code that does not take that into account can loop indefinitely.  GetTickCount64 operates on 64 bit values and does not have that problem
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(134): warning C28159: Consider using 'GetTickCount64' instead of 'GetTickCount'. Reason: GetTickCount overflows roughly every 49 days.  Code that does not take that into account can loop indefinitely.  GetTickCount64 operates on 64 bit values and does not have that problem
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(158): warning C28159: Consider using 'GetTickCount64' instead of 'GetTickCount'. Reason: GetTickCount overflows roughly every 49 days.  Code that does not take that into account can loop indefinitely.  GetTickCount64 operates on 64 bit values and does not have that problem
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(534): warning C28159: Consider using 'GetTickCount64' instead of 'GetTickCount'. Reason: GetTickCount overflows roughly every 49 days.  Code that does not take that into account can loop indefinitely.  GetTickCount64 operates on 64 bit values and does not have that problem

@@ -21,7 +21,51 @@ int SAMPLE=(MAX_SWEEP-BURNIN)/10; // Default value is 10 sample + 1 post burnin
 char* result_dir = "./";
 
 // Variables
-double kep,eta;
+double kep;
+
+
+class TotalLikelihood : public Task
+{
+public:
+	atomic<int> taskid;
+	int ntable;
+	int nchunks;
+	vector<Customer>& customers;
+	atomic<double> totalsum;
+	TotalLikelihood(vector<Customer>& customers,int nchunks) : nchunks(nchunks), customers(customers){
+	}
+	void reset() {
+		totalsum = 0;
+		taskid = 0;
+	}
+	void run(int id) {
+		// Use thread specific buffer
+		SETUP_ID()
+		int taskid = this->taskid++; // Oth thread is the main process
+		auto range = trange(n, nchunks, taskid); // 2xNumber of Threads chunks			
+		double logsum = 0;
+		for (auto i = range[0]; i< range[1]; i++) // Operates on its own chunk
+		{
+			logsum += customers[i].table->dist.likelihood(customers[i].data);
+		}
+		totalsum = totalsum + logsum;
+	}
+};
+
+
+void updateTableDish(list<Dish>& franchise,vector<Restaurant>& Restaurants)
+{
+	for (auto dit = franchise.begin(); dit != franchise.end(); dit++)
+		dit->calculateDist();
+	for (int i = 0; i < Restaurants.size(); i++)
+	{
+		// Each table
+		for (auto tit = Restaurants[i].tables.begin(); tit != Restaurants[i].tables.end(); tit++)
+		{
+			tit->calculateDist();
+		}
+	}
+}
 
 
 PILL_DEBUG
@@ -49,27 +93,17 @@ int main(int argc,char** argv)
 	// Computing buffer
 
 	printf("Reading...\n");
+	nthd = thread::hardware_concurrency() * 2;
 	DataSet ds(datafile,priorfile,configfile);
-	kep = kappa*kappa1/(kappa+ kappa1);
-	eta = m - d + 2;
+	kep = kappa*kappa1/(kappa + kappa1);
 
 	precomputeGammaLn(2*(n+d)+1);  // With 0.5 increments
-	init_buffer(thread::hardware_concurrency(),d);	
-	
 	Vector priormean(d); 
-	
 	Matrix priorvariance(d,d);
-	
-	Psi = ds.prior;
-	Psi.r = d; // Last row is shadowed
-	Psi.n = d*d;
-	mu0 =  ds.prior(d).copy();
-	
-	eta = eta;
-	priorvariance = Psi*((kep+1)/((kep)*eta));
+	priorvariance = Psi*((kep+1)/((kep)*(m-d+2)));
 	priormean = mu0;
 	
-	Stut stt(priormean,priorvariance,eta); 
+	Stut stt(priormean,priorvariance,m-d+2); 
 	Vector loglik0;
 	
 	Dish emptyDish(stt);
@@ -124,7 +158,7 @@ int main(int argc,char** argv)
 
 	// NUMBER OF THREADS
 	// =================
-	ThreadPool tpool(thread::hardware_concurrency());
+	ThreadPool tpool(nthd);
 	// ==================
 
 
@@ -137,14 +171,134 @@ int main(int argc,char** argv)
 
 	double newdishprob,maxdishprob,sumprob,val,logprob,gibbs_score,best_score;
 	int kal=1,id;
-	gibbs_score = -INFINITE;
-	best_score = -INFINITE;
+	gibbs_score = -INFINITY;
+	best_score = -INFINITY;
 
 	Vector score(MAX_SWEEP+1);
-	
 	vector<Restaurant> dishrestaurants;
+	TotalLikelihood tl(allcust, nthd);
 	for (int num_sweep = 0;num_sweep <= MAX_SWEEP ; num_sweep++)
 	{
+
+		if (hypersample)
+		{
+			// Update tables
+			for (i = 0; i < Restaurants.size(); i++)
+			{
+				for (auto& customer : Restaurants[i].customers)
+				{
+					allcust[customer.id - 1].table = customer.table;
+				}
+			}
+
+
+
+
+			Vector logprob(20);
+			int idx;
+			k = 0;
+			for (kappa = 0.05; kappa < 2; kappa += 0.1)
+			{
+				updateTableDish(franchise, Restaurants);
+				tl.reset();
+				for (i = 0; i<tl.nchunks; i++)
+					tpool.submit(tl);
+				tpool.waitAll(); // Wait for finishing all jobs
+				logprob[k] = tl.totalsum / n;
+
+				k++;
+				//cout << logprob << endl;
+			}
+			idx = sampleFromLog(logprob);
+			kappa = idx*0.1 + 0.05;
+			//cout << kappa << endl;
+			updateTableDish(franchise, Restaurants);
+
+			k = 0;
+			for (kappa1 = 0.05; kappa1 < 2; kappa1 += 0.1)
+			{
+				for (dit = franchise.begin(); dit != franchise.end(); dit++)
+					dit->reset();
+				for (i = 0, kal = 1; i < Restaurants.size(); i++) // Update stats
+				{
+					//Each table
+					for (tit = Restaurants[i].tables.begin(); tit != Restaurants[i].tables.end(); tit++, kal++)
+					{
+						tit->dishp->addCluster(*tit);
+					}
+				}
+				updateTableDish(franchise, Restaurants);
+				tl.reset();
+				for (i = 0; i<tl.nchunks; i++)
+					tpool.submit(tl);
+				tpool.waitAll(); // Wait for finishing all jobs
+								 //cout << tl.totalsum << ":";
+				logprob[k] = tl.totalsum / n;
+
+				k++;
+				//cout << logprob << endl;
+			}
+			//logprob.print();
+			idx = sampleFromLog(logprob);
+			kappa1 = idx*0.1 + 0.05;
+			updateTableDish(franchise, Restaurants);
+			//cout << kappa1 << endl;
+
+			k = 0;
+			for (m = d + 2; m < (d + 2 + 20 * d); m += d)
+			{
+				Psi = eye(d)*(m - d - 1);
+				updateTableDish(franchise, Restaurants);
+				tl.reset();
+				for (i = 0; i < tl.nchunks; i++)
+					tpool.submit(tl);
+				tpool.waitAll(); // Wait for finishing all jobs
+				logprob[k] = tl.totalsum / n;
+				k++;
+				//cout << logprob << endl;
+			}
+			//logprob.print();
+			idx = sampleFromLog(logprob);
+			m = d + 2 + (idx*d);
+			//cout << m << endl;
+			updateTableDish(franchise, Restaurants);
+			//Psi
+			/*
+			k = 0;
+			Psi = eye(d)*(m - d - 1.);
+			for (dit = franchise.begin(); dit != franchise.end(); dit++,k++)
+			Psi += dit->sampleScatter;
+			Psi /= ((n+m-d-1.)/((m - d - 1.)));*/
+			logprob.resize(10);
+			for (int dim = 0; dim < d; dim++) {
+				k = 0;
+				for (double ps = 0.1; ps < 2.1; ps += 0.2)
+				{
+					Psi.data[dim*d + dim] = ps*(m - d - 1);
+					updateTableDish(franchise, Restaurants);
+					tl.reset();
+					for (i = 0; i<tl.nchunks; i++)
+						tpool.submit(tl);
+					tpool.waitAll(); // Wait for finishing all jobs
+					logprob[k] = tl.totalsum / n;
+					k++;
+				}
+				idx = sampleFromLog(logprob);
+				Psi.data[dim*d + dim] = 0.1 + (idx)*0.2*(m - d - 1);
+				updateTableDish(franchise, Restaurants);
+			}
+			//Psi.print();
+
+			kep = kappa*kappa1 / (kappa + kappa1);
+			priorvariance = Psi*((kep + 1) / ((kep)*(m - d + 2)));
+			loglik0 = Stut(priormean, priorvariance, m - d + 2).likelihood(ds.data);
+
+		}
+
+
+
+
+
 
 
 		//Create restaurants for each dish
@@ -255,7 +409,7 @@ int main(int argc,char** argv)
 						intable.push_back(cit);
 				}
 
-				newdishprob = tit->npoints * log(gamma);
+				newdishprob = tit->npoints * log(gamma);//+ log(3/(franchise.size() + 1.0 )); // A possion factor added centered on 3 clusters
 				for(points=intable.begin();points!=intable.end();points++)
 					newdishprob += (*points)->loglik0;
 
@@ -309,31 +463,17 @@ int main(int argc,char** argv)
 			}
 		}
 
-		for (kappa = 0.5; kappa < 2; kappa += 0.5)
+		// 4th loop 
+		for (i = 0; i < Restaurants.size(); i++)
 		{
-			// 4th loop 
-			for (i = 0; i < Restaurants.size(); i++)
+			// Each table
+			for (tit = Restaurants[i].tables.begin(); tit != Restaurants[i].tables.end(); tit++)
 			{
-				// Each table
-				for (tit = Restaurants[i].tables.begin(); tit != Restaurants[i].tables.end(); tit++)
-				{
-					tit->calculateDist();
-				}
+				tit->calculateDist();
 			}
-
-			logprob = 0;
-			for (dit = franchise.begin(); dit != franchise.end(); dit++)
-			{
-				for (points = intable.begin(); points != intable.end(); points++)
-				{
-					// Here is computationally time consuming Under 4 for loops matrix division !!!!!!
-					logprob += dit->dist.likelihood((*points)->data);
-				}
-				//logprob = logprob + tit->npoints * log(dit->ntables); //Prior
-			}
-			cout << logprob << endl;
 		}
-		
+
+
 		// Calculate Gibbs Score
 		gibbs_score = 0;
 		for (i=0;i<Restaurants.size();i++)
@@ -349,6 +489,7 @@ int main(int argc,char** argv)
 			}
 			beststate = Restaurants;
 		}
+
 
 		if  (((num_sweep-BURNIN)%SAMPLE)==0 && num_sweep >= BURNIN)
 		{

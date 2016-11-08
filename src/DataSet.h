@@ -3,6 +3,7 @@
 #include "Global.h"
 #include "Stut.h"
 
+extern int hypersample;
 class DataSet 
 {
 public:
