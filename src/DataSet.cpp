@@ -20,20 +20,21 @@ DataSet::DataSet(char* datafile,char* priorfile,char* configfile)
 		kappa1 = conf(0)[3];
 		alpha = conf(0)[4];
 		gamma = conf(0)[5];
+		cout << kappa << " " << kappa1 << " " << alpha << " " << gamma;
 	}
 	else
 	{
-		m = d + 2;
-		kappa = 1;
-		kappa1 = 1;
+		m = d + 2; 
+		kappa = 0.05;
+		kappa1 = 0.5;
 		alpha = 1;
 		gamma = 1;
 	}
-
+	init_buffer(nthd, d);
 	if (fexists(priorfile))
 	{
 		prior.readBin(priorfile);
-		hypersample = 0;
+		hypersample = 1; // 0 actual value would be changed in further versions
 		Psi = prior;
 		Psi.r = d; // Last row is shadowed
 		Psi.n = d*d;
@@ -41,7 +42,6 @@ DataSet::DataSet(char* datafile,char* priorfile,char* configfile)
 	}
 	else
 	{
-		init_buffer(nthd, d);
 		Psi = eye(d)*(m - d - 1);
 		mu0 = data.mean();
 	}

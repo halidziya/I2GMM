@@ -15,8 +15,8 @@
 using namespace std;
 
 
-int MAX_SWEEP=500;
-int BURNIN=100;
+int MAX_SWEEP=1500;
+int BURNIN=1000;
 int SAMPLE=(MAX_SWEEP-BURNIN)/10; // Default value is 10 sample + 1 post burnin
 char* result_dir = "./";
 
@@ -55,6 +55,17 @@ public:
 
 void updateTableDish(list<Dish>& franchise,vector<Restaurant>& Restaurants)
 {
+	for (auto dit = franchise.begin(); dit != franchise.end(); dit++)
+		dit->reset();
+	for (int i = 0; i < Restaurants.size(); i++) // Update stats
+	{
+		//Each table
+		for (auto tit = Restaurants[i].tables.begin(); tit != Restaurants[i].tables.end(); tit++)
+		{
+			tit->dishp->addCluster(*tit);
+		}
+	}
+
 	for (auto dit = franchise.begin(); dit != franchise.end(); dit++)
 		dit->calculateDist();
 	for (int i = 0; i < Restaurants.size(); i++)
@@ -95,9 +106,10 @@ int main(int argc,char** argv)
 	printf("Reading...\n");
 	nthd = thread::hardware_concurrency() * 2;
 	DataSet ds(datafile,priorfile,configfile);
-	kep = kappa*kappa1/(kappa + kappa1);
 
-	precomputeGammaLn(2*(n+d)+1);  // With 0.5 increments
+	kep = kappa*kappa1/(kappa + kappa1);
+	
+	precomputeGammaLn(2*(n+d)+1+200*d);  // With 0.5 increments
 	Vector priormean(d); 
 	Matrix priorvariance(d,d);
 	priorvariance = Psi*((kep+1)/((kep)*(m-d+2)));
@@ -119,6 +131,8 @@ int main(int argc,char** argv)
 	
 	// INITIALIZATION
 	printf("Number of Cores : %d\n",thread::hardware_concurrency());
+
+
 
 	step();
 	loglik0		= emptyDish.dist.likelihood(ds.data);
@@ -180,7 +194,8 @@ int main(int argc,char** argv)
 	for (int num_sweep = 0;num_sweep <= MAX_SWEEP ; num_sweep++)
 	{
 
-		if (hypersample)
+
+		if (hypersample  )
 		{
 			// Update tables
 			for (i = 0; i < Restaurants.size(); i++)
@@ -191,14 +206,12 @@ int main(int argc,char** argv)
 				}
 			}
 
-
-
-
-			Vector logprob(20);
+			Vector logprob(50);
 			int idx;
 			k = 0;
-			for (kappa = 0.05; kappa < 2; kappa += 0.1)
+			for (kappa = 0.025; kappa < 5; kappa += 0.1)
 			{
+				kappa1 = 10 * kappa;
 				updateTableDish(franchise, Restaurants);
 				tl.reset();
 				for (i = 0; i<tl.nchunks; i++)
@@ -210,69 +223,64 @@ int main(int argc,char** argv)
 				//cout << logprob << endl;
 			}
 			idx = sampleFromLog(logprob);
-			kappa = idx*0.1 + 0.05;
+			kappa = idx*0.1 + 0.025;
+			kappa1 = 10 * kappa;
 			//cout << kappa << endl;
 			updateTableDish(franchise, Restaurants);
 
-			k = 0;
-			for (kappa1 = 0.05; kappa1 < 2; kappa1 += 0.1)
-			{
-				for (dit = franchise.begin(); dit != franchise.end(); dit++)
-					dit->reset();
-				for (i = 0, kal = 1; i < Restaurants.size(); i++) // Update stats
-				{
-					//Each table
-					for (tit = Restaurants[i].tables.begin(); tit != Restaurants[i].tables.end(); tit++, kal++)
-					{
-						tit->dishp->addCluster(*tit);
-					}
-				}
-				updateTableDish(franchise, Restaurants);
-				tl.reset();
-				for (i = 0; i<tl.nchunks; i++)
-					tpool.submit(tl);
-				tpool.waitAll(); // Wait for finishing all jobs
-								 //cout << tl.totalsum << ":";
-				logprob[k] = tl.totalsum / n;
+			//k = 0;
+			//for (kappa1 = 0.025; kappa1 < 2; kappa1 += 0.1)
+			//{
+			//	updateTableDish(franchise, Restaurants);
+			//	tl.reset();
+			//	for (i = 0; i<tl.nchunks; i++)
+			//		tpool.submit(tl);
+			//	tpool.waitAll(); // Wait for finishing all jobs
+			//					 //cout << tl.totalsum << ":";
+			//	logprob[k] = tl.totalsum / n;
 
-				k++;
-				//cout << logprob << endl;
-			}
-			//logprob.print();
-			idx = sampleFromLog(logprob);
-			kappa1 = idx*0.1 + 0.05;
-			updateTableDish(franchise, Restaurants);
-			//cout << kappa1 << endl;
+			//	k++;
+			//	//cout << logprob << endl;
+			//}
+			////logprob.print();
+			//idx = sampleFromLog(logprob);
+			//kappa1 = idx*0.1 + 0.025;
+			//updateTableDish(franchise, Restaurants);
+			////cout << kappa1 << endl;
 
-			k = 0;
-			for (m = d + 2; m < (d + 2 + 20 * d); m += d)
-			{
-				Psi = eye(d)*(m - d - 1);
-				updateTableDish(franchise, Restaurants);
-				tl.reset();
-				for (i = 0; i < tl.nchunks; i++)
-					tpool.submit(tl);
-				tpool.waitAll(); // Wait for finishing all jobs
-				logprob[k] = tl.totalsum / n;
-				k++;
-				//cout << logprob << endl;
-			}
-			//logprob.print();
-			idx = sampleFromLog(logprob);
-			m = d + 2 + (idx*d);
-			//cout << m << endl;
-			updateTableDish(franchise, Restaurants);
-			//Psi
-			/*
-			k = 0;
-			Psi = eye(d)*(m - d - 1.);
+			//Matrix oldPsi = Psi;
+			//k = 0;
+			//for (m = d + 2; m < (d + 2 + 100 * d); m += 2*d)
+			//{
+			//	Psi = eye(d)*(m - d - 1);
+			//	updateTableDish(franchise, Restaurants);
+			//	tl.reset();
+			//	for (i = 0; i < tl.nchunks; i++)
+			//		tpool.submit(tl);
+			//	tpool.waitAll(); // Wait for finishing all jobs
+			//	logprob[k] = tl.totalsum / n;
+			//	k++;
+			//	//cout << logprob << endl;
+			//}
+			////logprob.print();
+			//idx = sampleFromLog(logprob);
+			//m = d + 2 + (idx*2*d);
+			////cout << m << endl;
+			//Psi = eye(d)*(m - d - 1);
+			//updateTableDish(franchise, Restaurants);
+			////Psi
+			///*
+			//k = 0;
+			/*Psi = eye(d)*(m - d - 1.);
 			for (dit = franchise.begin(); dit != franchise.end(); dit++,k++)
 			Psi += dit->sampleScatter;
 			Psi /= ((n+m-d-1.)/((m - d - 1.)));*/
-			logprob.resize(10);
+			//logprob.resize(20
+			//Psi = eye(d)*(m - d - 1.);
+			//Psi = oldPsi;
 			for (int dim = 0; dim < d; dim++) {
 				k = 0;
-				for (double ps = 0.1; ps < 2.1; ps += 0.2)
+				for (double ps = 0.05; ps < 2.05; ps += 0.04)
 				{
 					Psi.data[dim*d + dim] = ps*(m - d - 1);
 					updateTableDish(franchise, Restaurants);
@@ -284,11 +292,30 @@ int main(int argc,char** argv)
 					k++;
 				}
 				idx = sampleFromLog(logprob);
-				Psi.data[dim*d + dim] = 0.1 + (idx)*0.2*(m - d - 1);
+				Psi.data[dim*d + dim] = (0.05 + (idx)*0.04) *(m - d - 1);
 				updateTableDish(franchise, Restaurants);
 			}
-			//Psi.print();
-
+			//logprob.resize(5);
+			//priormean = mu0;
+			//for (int dim = 0; dim < d; dim++) {
+			//	k = 0;
+			//	for (double add = -0.25; add < 0.25; add += 0.01)
+			//	{
+			//		mu0.data[dim] = priormean[dim] + add;
+			//		updateTableDish(franchise, Restaurants);
+			//		tl.reset();
+			//		for (i = 0; i<tl.nchunks; i++)
+			//			tpool.submit(tl);
+			//		tpool.waitAll(); // Wait for finishing all jobs
+			//		logprob[k] = tl.totalsum / n;
+			//		k++;
+			//	}
+			//	idx = sampleFromLog(logprob);
+			//	mu0.data[dim] = idx*0.01 - 0.25;
+			//	updateTableDish(franchise, Restaurants);
+			//}
+			//(Psi/(m-d-1)).print();
+			//priormean = mu0;
 			kep = kappa*kappa1 / (kappa + kappa1);
 			priorvariance = Psi*((kep + 1) / ((kep)*(m - d + 2)));
 			loglik0 = Stut(priormean, priorvariance, m - d + 2).likelihood(ds.data);
