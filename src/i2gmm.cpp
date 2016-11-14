@@ -104,7 +104,7 @@ int main(int argc,char** argv)
 	// Computing buffer
 
 	printf("Reading...\n");
-	nthd = thread::hardware_concurrency() * 2;
+	nthd = thread::hardware_concurrency();
 	DataSet ds(datafile,priorfile,configfile);
 
 	kep = kappa*kappa1/(kappa + kappa1);
@@ -195,7 +195,7 @@ int main(int argc,char** argv)
 	{
 
 
-		if (hypersample  )
+		if (hypersample)
 		{
 			// Update tables
 			for (i = 0; i < Restaurants.size(); i++)
@@ -209,9 +209,9 @@ int main(int argc,char** argv)
 			Vector logprob(50);
 			int idx;
 			k = 0;
-			for (kappa = 0.025; kappa < 5; kappa += 0.1)
+			for (kappa = 0.025; kappa < 2; kappa += 0.04)
 			{
-				kappa1 = 10 * kappa;
+				kappa1 = 3 * kappa;
 				updateTableDish(franchise, Restaurants);
 				tl.reset();
 				for (i = 0; i<tl.nchunks; i++)
@@ -223,13 +223,13 @@ int main(int argc,char** argv)
 				//cout << logprob << endl;
 			}
 			idx = sampleFromLog(logprob);
-			kappa = idx*0.1 + 0.025;
-			kappa1 = 10 * kappa;
+			kappa = idx*0.04 + 0.025;
+			kappa1 = 3 * kappa;
 			//cout << kappa << endl;
 			updateTableDish(franchise, Restaurants);
 
 			//k = 0;
-			//for (kappa1 = 0.025; kappa1 < 2; kappa1 += 0.1)
+			//for (kappa1 = 0.025; kappa1 < 5; kappa1 += 0.1)
 			//{
 			//	updateTableDish(franchise, Restaurants);
 			//	tl.reset();
@@ -248,39 +248,9 @@ int main(int argc,char** argv)
 			//updateTableDish(franchise, Restaurants);
 			////cout << kappa1 << endl;
 
-			//Matrix oldPsi = Psi;
-			//k = 0;
-			//for (m = d + 2; m < (d + 2 + 100 * d); m += 2*d)
-			//{
-			//	Psi = eye(d)*(m - d - 1);
-			//	updateTableDish(franchise, Restaurants);
-			//	tl.reset();
-			//	for (i = 0; i < tl.nchunks; i++)
-			//		tpool.submit(tl);
-			//	tpool.waitAll(); // Wait for finishing all jobs
-			//	logprob[k] = tl.totalsum / n;
-			//	k++;
-			//	//cout << logprob << endl;
-			//}
-			////logprob.print();
-			//idx = sampleFromLog(logprob);
-			//m = d + 2 + (idx*2*d);
-			////cout << m << endl;
-			//Psi = eye(d)*(m - d - 1);
-			//updateTableDish(franchise, Restaurants);
-			////Psi
-			///*
-			//k = 0;
-			/*Psi = eye(d)*(m - d - 1.);
-			for (dit = franchise.begin(); dit != franchise.end(); dit++,k++)
-			Psi += dit->sampleScatter;
-			Psi /= ((n+m-d-1.)/((m - d - 1.)));*/
-			//logprob.resize(20
-			//Psi = eye(d)*(m - d - 1.);
-			//Psi = oldPsi;
 			for (int dim = 0; dim < d; dim++) {
 				k = 0;
-				for (double ps = 0.05; ps < 2.05; ps += 0.04)
+				for (double ps = 0.05; ps < 1.05; ps += 0.02)
 				{
 					Psi.data[dim*d + dim] = ps*(m - d - 1);
 					updateTableDish(franchise, Restaurants);
@@ -292,9 +262,36 @@ int main(int argc,char** argv)
 					k++;
 				}
 				idx = sampleFromLog(logprob);
-				Psi.data[dim*d + dim] = (0.05 + (idx)*0.04) *(m - d - 1);
+				Psi.data[dim*d + dim] = (0.05 + (idx)*0.02) *(m - d - 1);
 				updateTableDish(franchise, Restaurants);
 			}
+
+			k = 0;
+			Matrix psi = (Psi / (m - d - 1)).copy();
+			//cout << m << endl ;
+			for (m = d + 2; m < (d + 2 + 100 * d); m += 2 * d)
+			{
+				Psi = psi*(m - d - 1);
+				updateTableDish(franchise, Restaurants);
+				tl.reset();
+				for (i = 0; i < tl.nchunks; i++)
+					tpool.submit(tl);
+				tpool.waitAll(); // Wait for finishing all jobs
+				logprob[k] = tl.totalsum / n;
+				k++;
+				//cout << logprob << endl;
+			}
+			//logprob.print();
+			idx = sampleFromLog(logprob);
+			m = d + 2 + (idx * 2 * d);
+			//cout << m << endl;
+			Psi = psi*(m - d - 1);
+
+
+
+
+			//Psi.print();
+			//updateTableDish(franchise, Restaurants);
 			//logprob.resize(5);
 			//priormean = mu0;
 			//for (int dim = 0; dim < d; dim++) {
@@ -377,7 +374,8 @@ int main(int argc,char** argv)
 		Restaurants = dishrestaurants;
 		random_shuffle(Restaurants.begin(),Restaurants.end());
 
-		printf("Iter %d nDish %d nRests %d Score %.1f\n",num_sweep,franchise.size(),Restaurants.size(),gibbs_score);	
+		if (num_sweep%10==0)
+			printf("Iter %d nDish %d nRests %d Score %.1f\n",num_sweep,franchise.size(),Restaurants.size(),gibbs_score);	
 			
 		for (i=0;i<Restaurants.size();i++)
 			tpool.submit(Restaurants[i]);	
