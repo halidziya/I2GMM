@@ -14,14 +14,15 @@ X_all= igmm_normalize(X_all_orig,32,false);
 ug=unique(G_all);
 ng=length(ug);
 s_range=1:30;
-for i=1:length(s_range)
+macf1 = zeros(30,1);
+parfor i=1:length(s_range)
 in=G_all==ug(s_range(i));
 X=X_all(in,:);
 Y=Y_all(in);
 %X=X(1:10:end,:);
 %Y=Y(1:10:end);
 d=size(X,2);
-niter=10;
+niter=2;
  
 for t=1:niter
 done=0;
@@ -41,9 +42,9 @@ k0=1;
 ki=1;
 %ki=10*k0;
 mu0=mean(X,1);
-Psi=(m-d-1)*eye(d);
+%Psi=(m-d-1)*eye(d)*10;
 %Psi=(m-d-1)*diag([1 1 0.1 0.1 1 0.1]);
-%Psi=(m-d-1)*diag([1 1 0.1 0.1 1 0.1]);
+Psi=(m-d-1)*diag([1 1 0.1 0.1 1 0.1]);
 alp=1; gam=1;
 %% IMIG
  
@@ -54,7 +55,7 @@ prior=[results_dir,'_prior.matrix'];
 params=[results_dir,'_params.matrix'];
 num_sweeps='2000';
 burn_in='1600';
-step='20';
+step='10';
 cmd = ['i2gmm.exe ',data,' ',prior,' ',params,' ',num_sweeps,' ', burn_in,' ',results_dir,' ',step];
 tic;
 system(cmd);
@@ -62,13 +63,13 @@ elapsed_time{i}(t)=toc;
 [dishes rests likelihood labels]=i2gmm_readOutput(results_dir);
 labels = align_labels(labels+1);
 f1s = evaluationTable(Y(Y~=0),labels(Y~=0))
-macf1(t) = table2array(f1s(1,1))
+macf1(i) = table2array(f1s(1,1))
 %t   = [allcust.tableid]';
 %ntables(i,j)=length(unique(t));
 %ndishes(i,j)=length(unique(c));
 %micF1Matrix{i}(t)=micF1;
 %macF1Matrix{i}(t)=macF1;
-f1{i}(t)=macf1(t);
+%f1{i}(t)=macf1(t);
 maxLik{i}(t)=likelihood(end);
     clf;
     subplot(2,1,1);
@@ -79,3 +80,4 @@ maxLik{i}(t)=likelihood(end);
 end
  
 end
+%for i=1:30; at(i) = mean(f1{i});end

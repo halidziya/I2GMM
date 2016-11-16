@@ -1,23 +1,23 @@
 experiments='experiments/';
 folder = strcat(experiments,'parallel');
 igmm_mkdir(folder);
-macf1=[];
-for datai=1:30
+macf1=zeros(30,1);
+parfor datai=1:30
     filename = ['..\..\data\Lymph\data\' num2str(datai,'%.3d') '.csv']
     labelname = ['..\..\data\Lymph\labels\' num2str(datai,'%.3d') '.csv']
     X=dlmread(filename,',',2);
     Y=dlmread(labelname,',',2);
     prefix = char(strcat(folder,'/Lymph/'));
     mkdir([prefix,'\plots\']);
-    X=igmm_normalize(X,32);
+    X=igmm_normalize(X,32,false);
     
     d=size(X,2);
-    k0=0.1;
-    ki=0.1;
+    k0=1;
+    ki=1;
     m=d+2;
-    %s=150/d/log(d);
+    s=150/d/log(d);
     mu0=mean(X,1);
-    Psi=(m-d-1)*diag(diag(cov(X)));
+    Psi=(m-d-1)*eye(d);%*diag([1 1 0.1 0.1 0.1]);
     alp=1; gam=1;
 
     fprintf(1,'Writing files...\n');
@@ -30,16 +30,16 @@ for datai=1:30
     
     %writeMat(data,X,'double');
 
-    num_sweeps = '2000  ';
-    burn_in='1800';
-    step='10';
+    num_sweeps = '1000';
+    burn_in='800';
+    step='5';
     fprintf(1,'I2GMM is running...\n');
-    cmd = ['i2gmm.exe ',data,' ',prior,' ',params,' ',num_sweeps,' ', burn_in,''];
+    cmd = ['i2gmmh.exe ',data,' ',prior,' ',params,' ',num_sweeps,' ', burn_in,' .\experiments\',num2str(datai)];
     tic;
     system(cmd);
     elapsed(datai) = toc;
 
-    [dishes rests likelihood labels]=i2gmm_readOutput('');
+    [dishes rests likelihood labels]=i2gmm_readOutput(['.\experiments\' num2str(datai)]);
 
     labels = align_labels(labels+1);
 

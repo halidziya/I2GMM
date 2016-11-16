@@ -209,9 +209,10 @@ int main(int argc,char** argv)
 			Vector logprob(50);
 			int idx;
 			k = 0;
+			double s = kappa1 / kappa;
 			for (kappa = 0.025; kappa < 2; kappa += 0.04)
 			{
-				kappa1 = 3 * kappa;
+				kappa1 = s * kappa;
 				updateTableDish(franchise, Restaurants);
 				tl.reset();
 				for (i = 0; i<tl.nchunks; i++)
@@ -224,29 +225,29 @@ int main(int argc,char** argv)
 			}
 			idx = sampleFromLog(logprob);
 			kappa = idx*0.04 + 0.025;
-			kappa1 = 3 * kappa;
+			kappa1 = s * kappa;
 			//cout << kappa << endl;
 			updateTableDish(franchise, Restaurants);
 
-			//k = 0;
-			//for (kappa1 = 0.025; kappa1 < 5; kappa1 += 0.1)
-			//{
-			//	updateTableDish(franchise, Restaurants);
-			//	tl.reset();
-			//	for (i = 0; i<tl.nchunks; i++)
-			//		tpool.submit(tl);
-			//	tpool.waitAll(); // Wait for finishing all jobs
-			//					 //cout << tl.totalsum << ":";
-			//	logprob[k] = tl.totalsum / n;
+			k = 0;
+			for (kappa1 = 1*kappa; kappa1 < 5*kappa; kappa1 += 0.08*kappa)
+			{
+				updateTableDish(franchise, Restaurants);
+				tl.reset();
+				for (i = 0; i<tl.nchunks; i++)
+					tpool.submit(tl);
+				tpool.waitAll(); // Wait for finishing all jobs
+								 //cout << tl.totalsum << ":";
+				logprob[k] = tl.totalsum / n;
 
-			//	k++;
-			//	//cout << logprob << endl;
-			//}
-			////logprob.print();
-			//idx = sampleFromLog(logprob);
-			//kappa1 = idx*0.1 + 0.025;
-			//updateTableDish(franchise, Restaurants);
-			////cout << kappa1 << endl;
+				k++;
+				//cout << logprob << endl;
+			}
+			//logprob.print();
+			idx = sampleFromLog(logprob);
+			kappa1 = 0.08*kappa*idx + 1*kappa;
+			updateTableDish(franchise, Restaurants);
+			//cout << kappa1 << endl;
 
 			for (int dim = 0; dim < d; dim++) {
 				k = 0;
@@ -290,9 +291,9 @@ int main(int argc,char** argv)
 
 
 
-			//Psi.print();
+			////Psi.print();
 			//updateTableDish(franchise, Restaurants);
-			//logprob.resize(5);
+			////logprob.resize(5);
 			//priormean = mu0;
 			//for (int dim = 0; dim < d; dim++) {
 			//	k = 0;
@@ -311,11 +312,11 @@ int main(int argc,char** argv)
 			//	mu0.data[dim] = idx*0.01 - 0.25;
 			//	updateTableDish(franchise, Restaurants);
 			//}
-			//(Psi/(m-d-1)).print();
+			////(Psi/(m-d-1)).print();
 			//priormean = mu0;
-			kep = kappa*kappa1 / (kappa + kappa1);
-			priorvariance = Psi*((kep + 1) / ((kep)*(m - d + 2)));
-			loglik0 = Stut(priormean, priorvariance, m - d + 2).likelihood(ds.data);
+			//kep = kappa*kappa1 / (kappa + kappa1);
+			//priorvariance = Psi*((kep + 1) / ((kep)*(m - d + 2)));
+			//loglik0 = Stut(priormean, priorvariance, m - d + 2).likelihood(ds.data);
 
 		}
 

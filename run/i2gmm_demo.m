@@ -52,7 +52,7 @@ num_sweeps='1500';
 burn_in='1000';
 step='50';
 fprintf(1,'I2GMM is running...\n');
-cmd = ['i2gmm.exe ',data,' ',prior,' ',params,' ',num_sweeps,' ', burn_in,' ',results_dir,' ',step];
+cmd = ['i2gmmh.exe ',data,' ',prior,' ',params,' ',num_sweeps,' ', burn_in,' ',results_dir,' ',step];
 tic;
 system(cmd);
 elapsed_time(j)=toc;
