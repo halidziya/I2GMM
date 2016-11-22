@@ -2,7 +2,9 @@ experiments='experiments/';
 folder = strcat(experiments,'parallel');
 igmm_mkdir(folder);
 macf1=zeros(30,1);
+SC =[];
 parfor datai=1:30
+    fprintf(1,'--%d--',datai);
     filename = ['..\..\data\Lymph\data\' num2str(datai,'%.3d') '.csv']
     labelname = ['..\..\data\Lymph\labels\' num2str(datai,'%.3d') '.csv']
     X=dlmread(filename,',',2);
@@ -34,14 +36,16 @@ parfor datai=1:30
     burn_in='800';
     step='5';
     fprintf(1,'I2GMM is running...\n');
-    cmd = ['i2gmmh.exe ',data,' ',prior,' ',params,' ',num_sweeps,' ', burn_in,' .\experiments\',num2str(datai)];
+    cmd = ['i2gmm.exe ',data,' ',prior,' ',params,' ',num_sweeps,' ', burn_in,' .\experiments\',num2str(datai)];
     tic;
     system(cmd);
     elapsed(datai) = toc;
 
     [dishes rests likelihood labels]=i2gmm_readOutput(['.\experiments\' num2str(datai)]);
-
-    labels = align_labels(labels+1);
+%    macs=[];
+%     for i=1:51; at=evaluationTable(Y(Y~=0),labels(Y~=0,i));macs(i)=table2array(at(1,1));end
+%     SC =[ SC ; [likelihood(801:4:1002),macs']];
+     labels = align_labels(labels+1);
 
     %slabels=readMat(char(strcat(prefix ,num2str(datai),'.matrix.superlabels')))+1;
     %labels=readMat(char(strcat(prefix ,num2str(datai),'.matrix.labels')))+1;
@@ -55,3 +59,5 @@ parfor datai=1:30
     subplot(2,1,2);
     scatter(X(:,1),X(:,2),10,labels);
 end
+
+mean(macf1)

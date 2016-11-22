@@ -11,7 +11,7 @@ function X=igmm_normalize(X,ndims,pca)
     end
     
     %X=(X-repmat(min(X),size(X,1),1))./repmat(max(X)-min(X),size(X,1),1);
-    X=X-ones(size(X,1),1)*mean(X,1);
+    %X=X-ones(size(X,1),1)*mean(X,1);
     if (pca)
         cc=cov(X);
         [vv dd]=eig(cc);

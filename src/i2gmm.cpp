@@ -17,7 +17,7 @@ using namespace std;
 
 int MAX_SWEEP=1500;
 int BURNIN=1000;
-int SAMPLE=(MAX_SWEEP-BURNIN)/10; // Default value is 10 sample + 1 post burnin
+int SAMPLE=(MAX_SWEEP-BURNIN)/50; // Default value is 10 sample + 1 post burnin
 char* result_dir = "./";
 
 // Variables
@@ -96,7 +96,7 @@ int main(int argc,char** argv)
 		BURNIN = atoi(argv[5]);
 	if (argc > 6)
 		result_dir = argv[6];
-	SAMPLE = (MAX_SWEEP-BURNIN)/10; // Default value
+	SAMPLE = (MAX_SWEEP-BURNIN)/50; // Default value
 	if (argc>7)
 		SAMPLE = atoi(argv[7]);
 	
@@ -114,6 +114,8 @@ int main(int argc,char** argv)
 	Matrix priorvariance(d,d);
 	priorvariance = Psi*((kep+1)/((kep)*(m-d+2)));
 	priormean = mu0;
+	Vector originalmean(d);
+	originalmean  = mu0;
 	
 	Stut stt(priormean,priorvariance,m-d+2); 
 	Vector loglik0;
@@ -143,7 +145,7 @@ int main(int argc,char** argv)
 	franchise.push_back(Dish(d));
 	list<Dish>::iterator firstDish = franchise.begin();
 	i=0;
-	Restaurants.reserve(200);
+	Restaurants.reserve(20);
 	Restaurants.resize(1);
 	Restaurants[i].Restaurantid = 0;
 	Table t(firstDish); // First dish
@@ -195,7 +197,7 @@ int main(int argc,char** argv)
 	{
 
 
-		if (hypersample)
+		if (hypersample )
 		{
 			// Update tables
 			for (i = 0; i < Restaurants.size(); i++)
@@ -206,11 +208,11 @@ int main(int argc,char** argv)
 				}
 			}
 
-			Vector logprob(50);
+			Vector logprob(20);
 			int idx;
 			k = 0;
 			double s = kappa1 / kappa;
-			for (kappa = 0.025; kappa < 2; kappa += 0.04)
+			for (kappa = 0.025; kappa < 2; kappa += 0.1)
 			{
 				kappa1 = s * kappa;
 				updateTableDish(franchise, Restaurants);
@@ -224,13 +226,13 @@ int main(int argc,char** argv)
 				//cout << logprob << endl;
 			}
 			idx = sampleFromLog(logprob);
-			kappa = idx*0.04 + 0.025;
+			kappa = idx*0.1 + 0.025;
 			kappa1 = s * kappa;
 			//cout << kappa << endl;
 			updateTableDish(franchise, Restaurants);
 
 			k = 0;
-			for (kappa1 = 1*kappa; kappa1 < 5*kappa; kappa1 += 0.08*kappa)
+			for (kappa1 = 1*kappa; kappa1 < 5*kappa; kappa1 += 0.2*kappa)
 			{
 				updateTableDish(franchise, Restaurants);
 				tl.reset();
@@ -245,13 +247,13 @@ int main(int argc,char** argv)
 			}
 			//logprob.print();
 			idx = sampleFromLog(logprob);
-			kappa1 = 0.08*kappa*idx + 1*kappa;
+			kappa1 = 0.2*kappa*idx + 1*kappa;
 			updateTableDish(franchise, Restaurants);
 			//cout << kappa1 << endl;
 
 			for (int dim = 0; dim < d; dim++) {
 				k = 0;
-				for (double ps = 0.05; ps < 1.05; ps += 0.02)
+				for (double ps = 0.05; ps < 1.05; ps += 0.05)
 				{
 					Psi.data[dim*d + dim] = ps*(m - d - 1);
 					updateTableDish(franchise, Restaurants);
@@ -263,14 +265,14 @@ int main(int argc,char** argv)
 					k++;
 				}
 				idx = sampleFromLog(logprob);
-				Psi.data[dim*d + dim] = (0.05 + (idx)*0.02) *(m - d - 1);
+				Psi.data[dim*d + dim] = (0.05 + (idx)*0.05) *(m - d - 1);
 				updateTableDish(franchise, Restaurants);
 			}
 
 			k = 0;
 			Matrix psi = (Psi / (m - d - 1)).copy();
 			//cout << m << endl ;
-			for (m = d + 2; m < (d + 2 + 100 * d); m += 2 * d)
+			for (m = d + 2; m < (d + 2 + 100 * d); m += 5 * d)
 			{
 				Psi = psi*(m - d - 1);
 				updateTableDish(franchise, Restaurants);
@@ -284,22 +286,49 @@ int main(int argc,char** argv)
 			}
 			//logprob.print();
 			idx = sampleFromLog(logprob);
-			m = d + 2 + (idx * 2 * d);
+			m = d + 2 + (idx * 5 * d);
 			//cout << m << endl;
 			Psi = psi*(m - d - 1);
 
 
 
+			for (gamma = 0.2; gamma < 1.2; gamma += 0.05)
+			{
+				double at = 0;
+				for (auto& f : franchise)
+				{
+					at += gammaln(f.nsamples);
+				}
+				logprob[k] = log(gamma)*franchise.size() + at - gammaln(n + gamma) + gammaln(gamma); // Partition likelihood
+			}
+			gamma = sampleFromLog(logprob)*0.05 + 0.2;
 
-			////Psi.print();
-			//updateTableDish(franchise, Restaurants);
-			////logprob.resize(5);
-			//priormean = mu0;
+
+			for (alpha = 0.2; alpha < 1.2; alpha += 0.05)
+			{
+				double at = 0;
+				for (auto& r : Restaurants) // Summation of lower layer CRP partition likelihoods
+				{
+					at += log(alpha)*r.tables.size();
+					for (auto t: r.tables)
+						at += gammaln(t.npoints);
+					at += gammaln(r.customers.size() + alpha) - gammaln(alpha);
+				}
+				logprob[k] = at;
+			}
+			alpha = sampleFromLog(logprob)*0.05 + 0.2;
+
+
+
+			
+			////mu0.print();
+			//logprob.resize(5);
+			////priormean = mu0;
 			//for (int dim = 0; dim < d; dim++) {
 			//	k = 0;
-			//	for (double add = -0.25; add < 0.25; add += 0.01)
+			//	for (double add = -0.1; add < 0.1; add += 0.04)
 			//	{
-			//		mu0.data[dim] = priormean[dim] + add;
+			//		mu0.data[dim] = originalmean.data[dim] + add;
 			//		updateTableDish(franchise, Restaurants);
 			//		tl.reset();
 			//		for (i = 0; i<tl.nchunks; i++)
@@ -309,14 +338,18 @@ int main(int argc,char** argv)
 			//		k++;
 			//	}
 			//	idx = sampleFromLog(logprob);
-			//	mu0.data[dim] = idx*0.01 - 0.25;
+			//	mu0.data[dim] = originalmean.data[dim] + idx*0.04 - 0.1;
 			//	updateTableDish(franchise, Restaurants);
 			//}
+			////mu0.print();
 			////(Psi/(m-d-1)).print();
 			//priormean = mu0;
-			//kep = kappa*kappa1 / (kappa + kappa1);
-			//priorvariance = Psi*((kep + 1) / ((kep)*(m - d + 2)));
-			//loglik0 = Stut(priormean, priorvariance, m - d + 2).likelihood(ds.data);
+
+
+
+			kep = kappa*kappa1 / (kappa + kappa1);
+			priorvariance = Psi*((kep + 1) / ((kep)*(m - d + 2)));
+			loglik0 = Stut(priormean, priorvariance, m - d + 2).likelihood(ds.data);
 
 		}
 
@@ -375,7 +408,7 @@ int main(int argc,char** argv)
 		Restaurants = dishrestaurants;
 		random_shuffle(Restaurants.begin(),Restaurants.end());
 
-		if (num_sweep%10==0)
+		if (num_sweep%2==0)
 			printf("Iter %d nDish %d nRests %d Score %.1f\n",num_sweep,franchise.size(),Restaurants.size(),gibbs_score);	
 			
 		for (i=0;i<Restaurants.size();i++)

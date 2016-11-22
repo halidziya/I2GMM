@@ -1,14 +1,14 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   i2gmm.cpp
 c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(91): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(431): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(576): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(577): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(384): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'unsigned __int64'
-  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(384): note: consider using '%zd' in the format string
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(384): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'unsigned __int64'
-  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(384): note: consider using '%zd' in the format string
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(130): warning C4101: 'j': unreferenced local variable
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(459): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(604): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(605): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(412): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'unsigned __int64'
+  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(412): note: consider using '%zd' in the format string
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(412): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'unsigned __int64'
+  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(412): note: consider using '%zd' in the format string
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(132): warning C4101: 'j': unreferenced local variable
 C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   I2GMM.vcxproj -> C:\Users\hzyereba\Desktop\I2GMM\run\I2GMM.exe
   I2GMM.vcxproj -> C:\Users\hzyereba\Desktop\I2GMM\run\I2GMM.pdb (Full PDB)

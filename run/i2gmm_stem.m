@@ -32,7 +32,7 @@ while done==0
 if ~isempty(message)
     run_no=run_no+1;
 else
-    results_dir=[results_parentdir,'run',num2str(run_no),'\'];
+    results_dir=[results_parentdir,'run',num2str(run_no),'\',num2str(i)];
     done=1;
 end
 end

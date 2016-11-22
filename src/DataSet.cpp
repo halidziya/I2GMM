@@ -25,8 +25,8 @@ DataSet::DataSet(char* datafile,char* priorfile,char* configfile)
 	else
 	{
 		m = d + 2; 
-		kappa = 0.05;
-		kappa1 = 0.5;
+		kappa = 0.001;
+		kappa1 = 0.01;
 		alpha = 1;
 		gamma = 1;
 	}
