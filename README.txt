@@ -38,3 +38,10 @@ Questions and Comments :
 Please send email to hzyereba@cs.iupui.edu with title I2GMM
 
 I2GMM is released under the terms of the GNU General Public License as published by the Free Software Foundation without any warranty.
+
+
+
+Update : 
+
+I2GMM has new structure. The project depends on FastMat and GMMBase now. GMMBase is shared module accross different projects. Also, ExperimentKit is the environment keeping all wrappers. 
+The code is Linux compatible with Cmake
