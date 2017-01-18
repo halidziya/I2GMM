@@ -45,9 +45,7 @@ void Restaurant::addTable(Table& t)
 void Restaurant::run(int id)
 {
 	// Use thread specific buffer
-	matbuffer.threadid = id;
-	buffer.threadid = id;
-	absbuffer.threadid = id;
+	threadid = id;
 
 	int i,n,ti,npts;
 	double sum,val,max,subrest,newclust; // Likelihood sum for normalization

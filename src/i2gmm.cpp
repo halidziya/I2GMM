@@ -78,6 +78,19 @@ void updateTableDish(list<Dish>& franchise,vector<Restaurant>& Restaurants)
 	}
 }
 
+bool compare_clusters(Dish& c1, Dish& c2)
+{
+	return c1.nsamples > c2.nsamples;
+}
+
+
+void reid(list<Dish>& clusters)
+{
+	clusters.sort(compare_clusters);
+	int i = 0;
+	for (auto& acul : clusters)
+		acul.dishid = i++;
+}
 
 PILL_DEBUG
 int main(int argc,char** argv)
@@ -96,7 +109,12 @@ int main(int argc,char** argv)
 		BURNIN = atoi(argv[5]);
 	if (argc > 6)
 		result_dir = argv[6];
-	SAMPLE = (MAX_SWEEP-BURNIN)/50; // Default value
+	else
+	{
+		string str(datafile);
+		result_dir = (char*) str.substr(0,str.find_last_of("/\\")).c_str();
+	}
+	SAMPLE = 1+(MAX_SWEEP-BURNIN)/50; // Default value
 	if (argc>7)
 		SAMPLE = atoi(argv[7]);
 	
@@ -109,7 +127,7 @@ int main(int argc,char** argv)
 
 	kep = kappa*kappa1/(kappa + kappa1);
 	
-	precomputeGammaLn(2*(n+d)+1+200*d);  // With 0.5 increments
+	precomputegamLn(2*(n+d)+1+200*d);  // With 0.5 increments
 	Vector priormean(d); 
 	Matrix priorvariance(d,d);
 	priorvariance = Psi*((kep+1)/((kep)*(m-d+2)));
@@ -193,11 +211,12 @@ int main(int argc,char** argv)
 	Vector score(MAX_SWEEP+1);
 	vector<Restaurant> dishrestaurants;
 	TotalLikelihood tl(allcust, nthd);
+	bool hypersample = false;
 	for (int num_sweep = 0;num_sweep <= MAX_SWEEP ; num_sweep++)
 	{
 
 
-		if (hypersample )
+		if (num_sweep%10==1)
 		{
 			// Update tables
 			for (i = 0; i < Restaurants.size(); i++)
@@ -232,7 +251,7 @@ int main(int argc,char** argv)
 			updateTableDish(franchise, Restaurants);
 
 			k = 0;
-			for (kappa1 = 1*kappa; kappa1 < 5*kappa; kappa1 += 0.2*kappa)
+			for (kappa1 = 1*kappa; kappa1 < (6-EPS)*kappa; kappa1 += 0.25*kappa)
 			{
 				updateTableDish(franchise, Restaurants);
 				tl.reset();
@@ -247,13 +266,13 @@ int main(int argc,char** argv)
 			}
 			//logprob.print();
 			idx = sampleFromLog(logprob);
-			kappa1 = 0.2*kappa*idx + 1*kappa;
+			kappa1 = 0.25*kappa*idx + 1*kappa;
 			updateTableDish(franchise, Restaurants);
 			//cout << kappa1 << endl;
 
 			for (int dim = 0; dim < d; dim++) {
 				k = 0;
-				for (double ps = 0.05; ps < 1.05; ps += 0.05)
+				for (double ps = 0.05; ps < (2.05-EPS); ps += 0.1)
 				{
 					Psi.data[dim*d + dim] = ps*(m - d - 1);
 					updateTableDish(franchise, Restaurants);
@@ -265,14 +284,14 @@ int main(int argc,char** argv)
 					k++;
 				}
 				idx = sampleFromLog(logprob);
-				Psi.data[dim*d + dim] = (0.05 + (idx)*0.05) *(m - d - 1);
+				Psi.data[dim*d + dim] = (0.05 + (idx)*0.1) *(m - d - 1);
 				updateTableDish(franchise, Restaurants);
 			}
 
 			k = 0;
 			Matrix psi = (Psi / (m - d - 1)).copy();
 			//cout << m << endl ;
-			for (m = d + 2; m < (d + 2 + 100 * d); m += 5 * d)
+			for (m = d + 2; m < (d + 2 + 100 * d - EPS); m += 5 * d)
 			{
 				Psi = psi*(m - d - 1);
 				updateTableDish(franchise, Restaurants);
@@ -292,31 +311,31 @@ int main(int argc,char** argv)
 
 
 
-			for (gamma = 0.2; gamma < 1.2; gamma += 0.05)
-			{
-				double at = 0;
-				for (auto& f : franchise)
-				{
-					at += gammaln(f.nsamples);
-				}
-				logprob[k] = log(gamma)*franchise.size() + at - gammaln(n + gamma) + gammaln(gamma); // Partition likelihood
-			}
-			gamma = sampleFromLog(logprob)*0.05 + 0.2;
+			//for (gam = 0.2; gam < 1.2; gam += 0.05)
+			//{
+			//	double at = 0;
+			//	for (auto& f : franchise)
+			//	{
+			//		at += gamln(f.nsamples);
+			//	}
+			//	logprob[k] = log(gam)*franchise.size() + at - gamln(n + gam) + gamln(gam); // Partition likelihood
+			//}
+			//gam = sampleFromLog(logprob)*0.05 + 0.2;
 
 
-			for (alpha = 0.2; alpha < 1.2; alpha += 0.05)
-			{
-				double at = 0;
-				for (auto& r : Restaurants) // Summation of lower layer CRP partition likelihoods
-				{
-					at += log(alpha)*r.tables.size();
-					for (auto t: r.tables)
-						at += gammaln(t.npoints);
-					at += gammaln(r.customers.size() + alpha) - gammaln(alpha);
-				}
-				logprob[k] = at;
-			}
-			alpha = sampleFromLog(logprob)*0.05 + 0.2;
+			//for (alpha = 0.2; alpha < 1.2; alpha += 0.05)
+			//{
+			//	double at = 0;
+			//	for (auto& r : Restaurants) // Summation of lower layer CRP partition likelihoods
+			//	{
+			//		at += log(alpha)*r.tables.size();
+			//		for (auto t: r.tables)
+			//			at += gamln(t.npoints);
+			//		at += gamln(r.customers.size() + alpha) - gamln(alpha);
+			//	}
+			//	logprob[k] = at;
+			//}
+			//alpha = sampleFromLog(logprob)*0.05 + 0.2;
 
 
 
@@ -360,6 +379,7 @@ int main(int argc,char** argv)
 
 
 		//Create restaurants for each dish
+		reid(franchise);
 		dishrestaurants.resize(0); // Remove all
 		dishrestaurants.resize(franchise.size());
 		for (i=0,dit=franchise.begin();dit!=franchise.end();dit++,i++)
@@ -468,7 +488,7 @@ int main(int argc,char** argv)
 						intable.push_back(cit);
 				}
 
-				newdishprob = tit->npoints * log(gamma);//+ log(3/(franchise.size() + 1.0 )); // A possion factor added centered on 3 clusters
+				newdishprob = tit->npoints * log(gam);//+ log(3/(franchise.size() + 1.0 )); // A possion factor added centered on 3 clusters
 				for(points=intable.begin();points!=intable.end();points++)
 					newdishprob += (*points)->loglik0;
 

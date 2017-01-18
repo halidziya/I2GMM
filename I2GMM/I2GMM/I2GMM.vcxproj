@@ -99,7 +99,7 @@
     <OutDir>C:\Users\hzyereba\Desktop\I2GMM\run</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>C:\Users\hzyereba\Desktop\I2GMM\run</OutDir>
+    <OutDir>..\..\..\ExperimentKit</OutDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -127,7 +127,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\hzyereba\Desktop\FastMat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\hzyereba\Desktop\GMMBase;C:\Users\hzyereba\Desktop\FastMat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -169,7 +169,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\hzyereba\Desktop\FastMat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\hzyereba\Desktop\GMMBase;C:\Users\hzyereba\Desktop\FastMat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>Yes</EnableMatrixMultiplyLibraryCall>
@@ -187,7 +187,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Customer.cpp" />
-    <ClCompile Include="..\..\src\DataSet.cpp" />
     <ClCompile Include="..\..\src\Dish.cpp" />
     <ClCompile Include="..\..\src\i2gmm.cpp" />
     <ClCompile Include="..\..\src\Restaurant.cpp" />
@@ -195,7 +194,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Customer.h" />
-    <ClInclude Include="..\..\src\DataSet.h" />
     <ClInclude Include="..\..\src\Dish.h" />
     <ClInclude Include="..\..\src\Restaurant.h" />
     <ClInclude Include="..\..\src\Table.h" />
@@ -203,6 +201,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\FastMat\FastMat\FastMat.vcxproj">
       <Project>{110c56d1-c85f-48b4-bb9e-6a5c701412ea}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\GMMBase\GMMBase.vcxproj">
+      <Project>{50e4909b-aa80-47b2-809d-2a09a47eaae5}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
