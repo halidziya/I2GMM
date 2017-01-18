@@ -45,3 +45,4 @@ Update :
 
 I2GMM has new structure. The project depends on FastMat and GMMBase now. GMMBase is shared module accross different projects. Also, ExperimentKit is the environment keeping all wrappers. 
 The code is Linux compatible with Cmake
+Please refer v1 branch for NIPS 2014 version
