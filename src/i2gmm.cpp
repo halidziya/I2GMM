@@ -15,12 +15,12 @@
 using namespace std;
 
 
+// Default Label Sampling values
 int MAX_SWEEP=1500;
 int BURNIN=1000;
-int SAMPLE=(MAX_SWEEP-BURNIN)/50; // Default value is 10 sample + 1 post burnin
+int SAMPLE=20;
+int STEP  = (MAX_SWEEP - BURNIN)/SAMPLE;
 char* result_dir = "./";
-
-// Variables
 double kep;
 
 
@@ -114,9 +114,16 @@ int main(int argc,char** argv)
 		string str(datafile);
 		result_dir = (char*) str.substr(0,str.find_last_of("/\\")).c_str();
 	}
-	SAMPLE = 1+(MAX_SWEEP-BURNIN)/50; // Default value
-	if (argc>7)
+	if (argc > 7)
+	{
 		SAMPLE = atoi(argv[7]);
+	}
+	STEP = (MAX_SWEEP - BURNIN) / SAMPLE;
+	if (BURNIN >= MAX_SWEEP | STEP == 0 ) // Housekeeping
+	{
+		BURNIN = MAX_SWEEP - 2;
+		SAMPLE = 1; STEP = 1;
+	}
 	
 	step();
 	// Computing buffer
@@ -144,7 +151,7 @@ int main(int argc,char** argv)
 	vector<vector<Restaurant>::iterator> Restaurantit; // Hash table
 	list<Dish> franchise;
 	list<Dish> bestdishes;
-	Matrix     sampledLabels((MAX_SWEEP-BURNIN)/SAMPLE + 1,n);
+	Matrix     sampledLabels(SAMPLE,n);
 	Table besttable;
 	Customer bestcustomer;
 	int i,j,k;
@@ -212,11 +219,11 @@ int main(int argc,char** argv)
 	vector<Restaurant> dishrestaurants;
 	TotalLikelihood tl(allcust, nthd);
 	bool hypersample = false;
-	for (int num_sweep = 0;num_sweep <= MAX_SWEEP ; num_sweep++)
+	for (int num_sweep = 0;num_sweep < MAX_SWEEP ; num_sweep++)
 	{
 
 
-		if (num_sweep%10==1)
+		if (false)
 		{
 			// Update tables
 			for (i = 0; i < Restaurants.size(); i++)
@@ -428,7 +435,7 @@ int main(int argc,char** argv)
 		Restaurants = dishrestaurants;
 		random_shuffle(Restaurants.begin(),Restaurants.end());
 
-		if (num_sweep%2==0)
+		if (num_sweep%5==0)
 			printf("Iter %d nDish %d nRests %d Score %.1f\n",num_sweep,franchise.size(),Restaurants.size(),gibbs_score);	
 			
 		for (i=0;i<Restaurants.size();i++)
@@ -570,7 +577,7 @@ int main(int argc,char** argv)
 		}
 
 
-		if  (((num_sweep-BURNIN)%SAMPLE)==0 && num_sweep >= BURNIN)
+		if  (((MAX_SWEEP-num_sweep - 1)%STEP)==0 && num_sweep >= BURNIN) // Later samples are better pick from last one
 		{
 			for (dit=franchise.begin(),i=0;dit!=franchise.end();dit++,i++)
 				dit->dishid = i;
@@ -585,18 +592,19 @@ int main(int argc,char** argv)
 			}
 			}
 
-
-			for(i=0;i<n;i++)
-			{
-				sampledLabels((num_sweep-BURNIN)/SAMPLE)[allcust[i].id-1] = allcust[i].table->dishp->dishid;
-				if (allcust[i].table->dishp->dishid<0 || allcust[i].table->dishp->dishid>franchise.size())
+			int sampleno = (MAX_SWEEP - num_sweep - 1) / STEP;
+			if (sampleno < SAMPLE)
+				try {
+				for (i = 0; i < n; i++)
 				{
-					error = 1;
-					printf("Something is wrong in C code : dishid %d table %d customer %d\n",allcust[i].table->dishp->dishid,allcust[i].table->tableid,allcust[i].id-1);
+					sampledLabels(sampleno)[allcust[i].id - 1] = allcust[i].table->dishp->dishid;
 				}
 			}
-			if (error)
+			catch (exception& error)
+			{
+				cout << "Error in writing labels : " << error.what();
 				pause();
+			}
 		}
 		
 		flush(cout);
