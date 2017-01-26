@@ -27,9 +27,23 @@ void Restaurant::operator=(Restaurant r)
 }
 
 
-Restaurant::Restaurant(const Restaurant&  r)
+Restaurant::Restaurant(Restaurant&  r)
 {
-	operator=(r);
+	tables = r.tables;
+	customers = r.customers;
+	Restaurantid = r.Restaurantid;
+	list<Table>::iterator it, tit;
+	vector<Customer>::iterator cit, rit;
+	int i;
+	for (it = tables.begin(), tit = r.tables.begin(); tit != r.tables.end(); tit++, it++)
+	{
+		tit->copy = it;
+		it->dishp = tit->dishp->copy;
+	}
+	for (cit = customers.begin(), rit = r.customers.begin(); cit != customers.end(); cit++, rit++)
+	{
+		cit->table = rit->table->copy; // Point to copied object
+	}
 }
 
 Restaurant::~Restaurant(void)

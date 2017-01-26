@@ -25,7 +25,7 @@ public:
 	void run(int id);
 
 	void operator=(Restaurant r);
-	Restaurant(const Restaurant& r); // Copy constructor
+	Restaurant(Restaurant& r); // Copy constructor
 	
 	
 	friend ostream& operator<<(ostream& os, Restaurant& v);
