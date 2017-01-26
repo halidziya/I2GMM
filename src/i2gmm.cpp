@@ -431,8 +431,10 @@ int main(int argc,char** argv)
 		{
 			dit->copy = dit;
 		}
-		Restaurants.resize(0);
-		Restaurants = dishrestaurants;
+		Restaurants.resize(dishrestaurants.size());
+		for (i=0;i<Restaurants.size();i++)
+			Restaurants[i].copyfrom(dishrestaurants[i]);
+		//Restaurants.copy(dishrestaurants);
 		//random_shuffle(Restaurants.begin(),Restaurants.end());
 
 		if (num_sweep%5==0)

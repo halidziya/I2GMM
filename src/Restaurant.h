@@ -23,9 +23,9 @@ public:
 	
 	~Restaurant(void);
 	void run(int id);
-
-	void operator=(Restaurant r);
-	Restaurant(Restaurant& r); // Copy constructor
+	void copyfrom(Restaurant& r);
+	//void operator=(Restaurant r);
+	//Restaurant(Restaurant& r); // Copy constructor
 	
 	
 	friend ostream& operator<<(ostream& os, Restaurant& v);
