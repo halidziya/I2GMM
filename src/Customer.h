@@ -12,7 +12,7 @@ public:
 	Customer(Vector& data,double loglik,list<Table>::iterator table,int id);
 	Customer();
 	Vector data;
-	void operator=(Customer& c);
+	void operator=(Customer c);
 	~Customer(void);
 	double loglik0;
 	int id;

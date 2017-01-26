@@ -130,7 +130,7 @@ int main(int argc,char** argv)
 
 	printf("Reading...\n");
 	nthd = thread::hardware_concurrency();
-	DataSet ds(datafile,priorfile,configfile);
+	DataSet ds(argc,argv);
 
 	kep = kappa*kappa1/(kappa + kappa1);
 	
@@ -433,7 +433,7 @@ int main(int argc,char** argv)
 		}
 		Restaurants.resize(0);
 		Restaurants = dishrestaurants;
-		random_shuffle(Restaurants.begin(),Restaurants.end());
+		//random_shuffle(Restaurants.begin(),Restaurants.end());
 
 		if (num_sweep%5==0)
 			printf("Iter %d nDish %d nRests %d Score %.1f\n",num_sweep,franchise.size(),Restaurants.size(),gibbs_score);	

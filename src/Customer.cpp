@@ -18,7 +18,7 @@ Customer::~Customer(void)
 }
 
 
-void Customer::operator=(Customer& c) 
+void Customer::operator=(Customer c) 
 {
 	loglik0=c.loglik0;
 	table=c.table;

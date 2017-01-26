@@ -87,7 +87,7 @@ Table::Table(const Table& t)
 	tableid = t.tableid;
 }
 
-void Table::operator=(const Table& t)
+void Table::operator=(const Table t)
 {
 	npoints = t.npoints;
 	dist = t.dist;

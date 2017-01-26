@@ -31,7 +31,7 @@ public:
 	void removePoint(Vector& v);
 	void addInitPoint(Vector& v);
 
-	void operator=(const Table& t);
+	void operator=(const Table t);
 	void calculateCov(); // Fill covariance sampleCov , again scatter actually
 	void calculateDist();
 

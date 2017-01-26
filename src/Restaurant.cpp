@@ -6,7 +6,7 @@ Restaurant::Restaurant(void)
 }
 
 
-void Restaurant::operator=(Restaurant& r)
+void Restaurant::operator=(Restaurant r)
 {
 	tables = r.tables;
 	customers = r.customers;
@@ -27,7 +27,7 @@ void Restaurant::operator=(Restaurant& r)
 }
 
 
-Restaurant::Restaurant(Restaurant& r)
+Restaurant::Restaurant(const Restaurant&  r)
 {
 	operator=(r);
 }
