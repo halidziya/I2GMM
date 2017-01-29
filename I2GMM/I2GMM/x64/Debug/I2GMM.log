@@ -1,19 +1,32 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   i2gmm.cpp
 c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(104): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(479): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(624): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(625): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(121): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(157): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(160): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(184): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(432): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'unsigned __int64'
-  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(432): note: consider using '%zd' in the format string
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(432): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'unsigned __int64'
-  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(432): note: consider using '%zd' in the format string
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(605): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
-c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(150): warning C4101: 'j': unreferenced local variable
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(122): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(488): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(634): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(635): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(128): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(164): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(167): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(191): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(441): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'unsigned __int64'
+  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(441): note: consider using '%zd' in the format string
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(441): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'unsigned __int64'
+  c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(441): note: consider using '%zd' in the format string
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(615): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
+c:\users\hzyereba\desktop\i2gmm\src\i2gmm.cpp(157): warning C4101: 'j': unreferenced local variable
+  Table.cpp
+  Restaurant.cpp
+c:\users\hzyereba\desktop\i2gmm\src\restaurant.cpp(16): warning C4101: 'i': unreferenced local variable
+c:\users\hzyereba\desktop\i2gmm\src\restaurant.cpp(47): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\restaurant.cpp(45): warning C4101: 'ti': unreferenced local variable
+c:\users\hzyereba\desktop\i2gmm\src\restaurant.cpp(46): warning C4101: 'subrest': unreferenced local variable
+c:\users\hzyereba\desktop\i2gmm\src\restaurant.cpp(132): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hzyereba\desktop\i2gmm\src\restaurant.cpp(135): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Customer.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  Dish.cpp
 C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   I2GMM.vcxproj -> C:\Users\hzyereba\Desktop\I2GMM\run\I2GMM.exe
   I2GMM.vcxproj -> C:\Users\hzyereba\Desktop\I2GMM\run\I2GMM.pdb (Full PDB)

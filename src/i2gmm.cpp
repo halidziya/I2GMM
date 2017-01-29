@@ -621,42 +621,44 @@ int main(int argc,char** argv)
 	Restaurants = beststate;
 	
 
-	string s(result_dir);
-	ofstream dishfile( s.append("Dish.dish"),ios::out | ios::binary); // Be careful result_dir should include '\'
-	s.assign(result_dir);
-	ofstream restfile( s.append("Restaurant.rest"),ios::out | ios::binary);
-	s.assign(result_dir);
-	ofstream likefile( s.append("Likelihood.matrix"),ios::out | ios::binary);
-	
-	s.assign(result_dir);
-	ofstream labelfile( s.append("Labels.matrix"),ios::out | ios::binary);
 
-	int ndish = franchise.size();
-	int nrest = Restaurants.size();
-	dishfile.write((char*)& ndish,sizeof(int));
-	restfile.write((char*)& nrest,sizeof(int));
+	try {
+		string s(result_dir);
+		ofstream dishfile(s.append("Dish.dish"), ios::out | ios::binary); // Be careful result_dir should include '\'
+		int ndish = franchise.size();
+		int nrest = Restaurants.size();
+		dishfile.write((char*)& ndish, sizeof(int));
+		for (i = 0, dit = franchise.begin(); dit != franchise.end(); i++, dit++)
+		{
+			dit->dishid = i + 1;
+			dishfile << *dit;
+		}
+		dishfile.close();
 
-	for(i=0,dit=franchise.begin();dit!=franchise.end();i++,dit++) 
-	{
-		dit->dishid = i+1;
-		dishfile <<  *dit;
+		s.assign(result_dir);
+		ofstream restfile(s.append("Restaurant.rest"), ios::out | ios::binary);
+		restfile.write((char*)& nrest, sizeof(int));
+		for (i = 0; i < nrest; i++)
+		{
+			restfile << Restaurants[i];
+		}
+		restfile.close();
+
+		s.assign(result_dir);
+		ofstream likefile(s.append("Likelihood.matrix"), ios::out | ios::binary);
+		likefile << score;
+		likefile.close();
+
+		s.assign(result_dir);
+		ofstream labelfile(s.append("Labels.matrix"), ios::out | ios::binary);
+		labelfile << sampledLabels;
+		labelfile.close();
+
+		nsampleslog.close();
 	}
-	dishfile.close();
-
-
-	for (i=0;i<nrest;i++)
+	catch (exception e)
 	{
-		restfile << Restaurants[i];
+		cout << "Error in writing files " << endl;
+		return -1;
 	}
-
-	restfile.close();
-
-
-	likefile << score;
-	likefile.close();
-
-	labelfile << sampledLabels;
-	labelfile.close();
-
-	nsampleslog.close();
 }
