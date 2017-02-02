@@ -634,15 +634,16 @@ int main(int argc,char** argv)
 			dishfile << *dit;
 		}
 		dishfile.close();
-
-		s.assign(result_dir);
-		ofstream restfile(s.append("Restaurant.rest"), ios::out | ios::binary);
-		restfile.write((char*)& nrest, sizeof(int));
-		for (i = 0; i < nrest; i++)
-		{
-			restfile << Restaurants[i];
-		}
-		restfile.close();
+	
+		// TODO : There is a bug in writting customers of the restaurant
+		//s.assign(result_dir);
+		//ofstream restfile(s.append("Restaurant.rest"), ios::out | ios::binary);
+		//restfile.write((char*)& nrest, sizeof(int));
+		//for (i = 0; i < nrest; i++)
+		//{
+		//	restfile << Restaurants[i];
+		//}
+		//restfile.close();
 
 		s.assign(result_dir);
 		ofstream likefile(s.append("Likelihood.matrix"), ios::out | ios::binary);
