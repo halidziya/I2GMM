@@ -1,8 +1,8 @@
 Update, Jan 2017: 
 
 I2GMM has a new structure. The project depends on our FastMat and GMMBase now. 
-GMMBase is shared module across different projects. FastMat is matrix algebra and statistics library. 
-Also, ExperimentKit is the environment keeping all wrappers. However, default parameters allow running I2gmm easily with drag-drop. We are planning to add CSV support.
+GMMBase is shared module across different projects. FastMat is a matrix algebra and statistics library. 
+Also, ExperimentKit is the environment keeping all wrappers. However, default parameters allow running I2gmm easily with drag-drop on matrix files. We are planning to add CSV support later.
 The code is Linux compatible with CMake.
 Please refer v1 branch for NIPS 2014 version
 
