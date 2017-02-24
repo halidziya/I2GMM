@@ -6,7 +6,6 @@ Also, ExperimentKit is the environment keeping all wrappers. However, default pa
 The code is Linux compatible with CMake.
 Please refer v1 branch for NIPS 2014 version
 
-
 I2GMM: Infinite mixtures of Infinite Gaussian Mixtures
 
 Description: I2GMM is a nonparametric Bayesian model for complex clustering applications. It allows an arbitrary number of clusters with arbitrary shapes including skewed and multi-modal ones. I2GMM models each cluster with Dirichlet Process of Gaussian mixtures that allow these arbitrary shapes. Also, clusters themselves distributed according to Dirichlet Process. Thus number clusters and its components are learned from the data during the inference. We used efficient collapsed Gibbs sampler for inference using conjugacy of Gaussian distribution in the hierarchy. Partial parallelization is possible by conditioning on the upper layer in the hierarchy. Empirical evaluation on public datasets shows the effectiveness of the model. This model is also related to the ASPIRE model which works on grouped clustering problems. For more details about ASPIRE please refer to ASPIRE's repository. 
