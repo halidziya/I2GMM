@@ -1,4 +1,4 @@
-Update, Jan 2016: 
+Update, Jan 2017: 
 
 I2GMM has a new structure. The project depends on our FastMat and GMMBase now. 
 GMMBase is shared module across different projects. FastMat is matrix algebra and statistics library. 
